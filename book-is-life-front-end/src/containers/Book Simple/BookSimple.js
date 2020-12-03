@@ -10,7 +10,8 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
     root: {
-        maxWidth: 345,
+        maxWidth: 185,
+        margin: 2,
     },
 
 });
@@ -29,18 +30,21 @@ export default function BookSimple(props) {
                     image={props.image}
                     title={props.title}
                 />
-                <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
+                <CardContent style={{height: 125}}>
+                    <Typography gutterBottom variant="body2" component="p" style={{ height: 66}}>
                         {props.bookTitle}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
-                        {props.shortResume}
+                        {props.author}
+                    </Typography>
+                    <Typography variant="body3" color="red" component="p">
+                        R$ {props.value}
                     </Typography>
                 </CardContent>
             </CardActionArea>
             <CardActions style={{justifyContent: 'center'}}>
 
-                <Button size="small" color="primary">
+                <Button size="small" color="primary"style={{fontSize: 10}}>
                     Colocar no Carrinho
                 </Button>
             </CardActions>

@@ -9,19 +9,19 @@ import { generateReducers } from "../../reducers";
 import { routerMiddleware } from "connected-react-router";
 import { createMuiTheme } from '@material-ui/core/styles';
 import purple from '@material-ui/core/colors/purple';
-import orange from '@material-ui/core/colors/orange';
+//import orange from '@material-ui/core/colors/orange';
 
 export const history = createBrowserHistory();
 
 const theme = createMuiTheme({
   palette: {
-    primary: orange,
+    primary: purple,
     secondary: { main: '#9c27b0'},
   },
   status: {
     danger: 'red',
   },
-});
+  });
 
 const middlewares = [
   applyMiddleware(routerMiddleware(history), thunk),
