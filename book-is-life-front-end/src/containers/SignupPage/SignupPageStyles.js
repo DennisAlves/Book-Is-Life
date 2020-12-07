@@ -33,10 +33,11 @@ export const Footer = styled.div`
 
 export const SignupWrapper = styled.form`
     width: 100%;
-    height: 80vh;
+    height: max-content;
     gap: 10px;
     place-content: center;
     justify-items: center;
     display: grid;
+    padding-bottom: 20px;
 `;
 
