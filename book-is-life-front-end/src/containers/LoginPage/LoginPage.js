@@ -40,7 +40,8 @@ class LoginPage extends Component {
                         </LPS.CustomHeader>
                     </Paper>
 
-                    <LPS.LoginWrapper onSubmit={this.handleLogin}>
+                    <LPS.LoginWrapper onSubmit={()=>{console.log(this.state.email,
+                        this.state.password)}}>
                         <h4>Já criou uma conta? Entre aqui!</h4>
 
                         <TextField

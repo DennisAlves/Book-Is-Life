@@ -41,3 +41,31 @@ export const SignupWrapper = styled.form`
     padding-bottom: 20px;
 `;
 
+export const ClientWrapper = styled.div`
+
+`
+export const ClientFieldsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`
+
+export const AdressWrapper = styled.div`
+  display: flex;
+  gap: 10px;
+`
+export const AdressFieldsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`
+export const CreditCardWrapper = styled.div`
+  display: flex;
+  gap: 10px;
+`
+export const CreditCardFieldsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`
+
