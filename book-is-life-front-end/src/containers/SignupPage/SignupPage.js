@@ -14,6 +14,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
+import Cards from 'react-credit-cards';
+import 'react-credit-cards/es/styles-compiled.css';
 
 
 class LoginPage extends Component {
@@ -26,7 +28,26 @@ class LoginPage extends Component {
             passwordCheck: "",
             phone: "",
             showPassword: false,
-            logradouro: "",
+            deliveryLogradouro: "",
+            deliveryCep: "",
+            deliveryEndereco: "",
+            deliveryBairro: "",
+            deliveryNumero: "",
+            deliveryComplemento: "",
+            paymentLogradouro: "",
+            paymentCep: "",
+            paymentEndereco: "",
+            paymentBairro: "",
+            paymentNumero: "",
+            paymentComplemento: "",
+            adressType: "",
+            adressList: [],
+            cvc: "",
+            expiry: "",
+            focus: "",
+            name: "",
+            number: "",
+
         };
     }
 
@@ -35,6 +56,9 @@ class LoginPage extends Component {
             [event.target.name]: event.target.value
         });
     };
+    handleInputFocus = (e) => {
+        this.setState({focus: e.target.name});
+    }
 
     handleMouseDownPassword = () => {
         if (!this.state.showPassword) {
@@ -43,7 +67,37 @@ class LoginPage extends Component {
             this.setState({showPassword: false});
         }
     };
+    handleDeliveryAdressSave = (adressType) => {
+        const endereco = {
+            logradouro: this.state.deliveryLogradouro,
+            cep: this.state.deliveryCep,
+            endereco: this.state.deliveryEndereco,
+            bairro: this.state.deliveryBairro,
+            numero: this.state.deliveryNumero,
+            complemento: this.state.deliveryComplemento,
+            adressType: adressType,
+        }
+        this.setState({
+            adressList: [...this.state.adressList, endereco],
+            showAdressFields: !this.state.showAdressFields
+        })
+    }
+    handlePaymentAdressSave = (adressType) => {
+        const endereco = {
+            logradouro: this.state.paymentLogradouro,
+            cep: this.state.paymentCep,
+            endereco: this.state.paymentEndereco,
+            bairro: this.state.paymentBairro,
+            numero: this.state.paymentNumero,
+            complemento: this.state.paymentComplemento,
+            adressType: adressType,
+        }
+        this.setState({
+            adressList: [...this.state.adressList, endereco],
+            showAdressFields: !this.state.showAdressFields
+        })
 
+    }
 
     render() {
         const {
@@ -52,13 +106,6 @@ class LoginPage extends Component {
             signupUsername,
             passwordCheck,
             showPassword,
-            logradouro,
-            cep,
-            endereco,
-            bairro,
-            numero,
-            complemento,
-
         } = this.state;
         const logradouroList = [
             "Aeroporto",
@@ -116,164 +163,291 @@ class LoginPage extends Component {
                         </SPS.CustomHeader>
                     </Paper>
 
-                    <SPS.SignupWrapper onSubmit={this.handleLogin}>
+                    <SPS.SignupWrapper onSubmit={() => {
+                        console.log(JSON.stringify(this.state.adressList))
+                    }}>
                         <h4>Dados para cadastro</h4>
+                        <SPS.ClientWrapper>
+                            <SPS.ClientFieldsWrapper>
+                                <TextField
+                                    inputProps={{
+                                        pattern: "[a-zA-Z.]{6,16}",
+                                        title: "O Nome precisa ter entre 6 e 16 caracteres alfanumericos."
+                                    }}
+                                    onChange={this.handleFieldChange}
+                                    name="signupUsername"
+                                    type="username"
+                                    label="Nome"
+                                    value={signupUsername}
+                                    required
+                                />
 
-                        <TextField
-                            inputProps={{
-                                pattern: "[a-zA-Z.]{6,16}",
-                                title: "O Nome precisa ter entre 6 e 16 caracteres alfanumericos."
-                            }}
-                            onChange={this.handleFieldChange}
-                            name="signupUsername"
-                            type="username"
-                            label="Nome"
-                            value={signupUsername}
-                            required
-                        />
+                                <TextField
+                                    onChange={this.handleFieldChange}
+                                    name="email"
+                                    type="email"
+                                    label="E-mail"
+                                    required
+                                    value={email}
+                                />
 
-                        <TextField
-                            onChange={this.handleFieldChange}
-                            name="email"
-                            type="email"
-                            label="E-mail"
-                            required
-                            value={email}
-                        />
+                                <TextField
+                                    name="password"
+                                    label="Password"
+                                    required
+                                    value={password}
+                                    type={showPassword ? "text" : "password"}
+                                    onChange={this.handleFieldChange}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onMouseDown={this.handleMouseDownPassword}
+                                                    onMouseUp={this.handleMouseDownPassword}
+                                                >
+                                                    {showPassword ? <Visibility/> : <VisibilityOff/>}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                        pattern: "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$",
+                                        title: "A senha precisa ter entre 6 e 16 caracteres alfanumericos.",
+                                        autoComplete: 'new-password',
+                                    }}
 
-                        <TextField
-                            name="password"
-                            label="Password"
-                            required
-                            value={password}
-                            type={showPassword ? "text" : "password"}
-                            onChange={this.handleFieldChange}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label="toggle password visibility"
-                                            onMouseDown={this.handleMouseDownPassword}
-                                            onMouseUp={this.handleMouseDownPassword}
-                                        >
-                                            {showPassword ? <Visibility/> : <VisibilityOff/>}
-                                        </IconButton>
-                                    </InputAdornment>
-                                ),
-                                pattern: "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$",
-                                title: "A senha precisa ter entre 6 e 16 caracteres alfanumericos.",
-                                autoComplete: 'new-password',
-                            }}
+                                />
 
-                        />
+                                <TextField
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onMouseDown={this.handleMouseDownPassword}
+                                                    onMouseUp={this.handleMouseDownPassword}
+                                                >
+                                                    {showPassword ? <Visibility/> : <VisibilityOff/>}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                        pattern: "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$",
+                                        title: "A senha precisa ter entre 6 e 16 caracteres alfanumericos.",
+                                        autoComplete: 'new-password',
+                                    }}
+                                    onChange={this.handleFieldChange}
+                                    name="passwordCheck"
+                                    type={showPassword ? "text" : "password"}
+                                    label="Password check"
+                                    required
+                                    error={this.state.password !== this.state.passwordCheck}
+                                    helperText={this.state.password !== this.state.passwordCheck ? "senhas divergentes" : ""}
+                                    value={passwordCheck}
+                                />
+                                <PhoneInput
+                                    inputProps={{
+                                        name: 'phone',
+                                        required: true,
+                                        autoFocus: false
+                                    }}
+                                    isValid={(value,) => {
+                                        if (value.length < 13 && value.length > 2) {
+                                            return 'numero invalido';
+                                        } else if (value.length < 13 && value.length > 2) {
+                                            return false;
+                                        } else {
+                                            return true;
+                                        }
+                                    }}
+                                    country={'br'}
+                                    value={this.state.phone}
+                                    onChange={phone => this.setState({phone})}
+                                />
+                            </SPS.ClientFieldsWrapper>
+                        </SPS.ClientWrapper>
 
-                        <TextField
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label="toggle password visibility"
-                                            onMouseDown={this.handleMouseDownPassword}
-                                            onMouseUp={this.handleMouseDownPassword}
-                                        >
-                                            {showPassword ? <Visibility/> : <VisibilityOff/>}
-                                        </IconButton>
-                                    </InputAdornment>
-                                ),
-                                pattern: "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$",
-                                title: "A senha precisa ter entre 6 e 16 caracteres alfanumericos.",
-                                autoComplete: 'new-password',
-                            }}
-                            onChange={this.handleFieldChange}
-                            name="passwordCheck"
-                            type={showPassword ? "text" : "password"}
-                            label="Password check"
-                            required
-                            error={this.state.password !== this.state.passwordCheck}
-                            helperText={this.state.password !== this.state.passwordCheck ? "senhas divergentes" : ""}
-                            value={passwordCheck}
-                        />
-                        <PhoneInput
-                            inputProps={{
-                                name: 'phone',
-                                required: true,
-                                autoFocus: false
-                            }}
-                            isValid={(value,) => {
-                                if (value.length !== 13) {
-                                    return 'numero invalido';
-                                } else if (value.length !== 13) {
-                                    return false;
-                                } else {
-                                    return true;
-                                }
-                            }}
-                            country={'br'}
-                            value={this.state.phone}
-                            onChange={phone => this.setState({phone})}
-                        />
-                        <FormControl style={{minWidth: 120}}>
-                            <InputLabel>Logradouro</InputLabel>
-                            <Select
-                                name="logradouro"
-                                value={logradouro}
-                                onChange={this.handleFieldChange}
-                            >
-                                {logradouroList.map(item => {
-                                    return (
-                                        <MenuItem value={item}>
-                                            <li>{item}</li>
-                                        </MenuItem>
-                                    );
-                                })}
+                        <SPS.AdressWrapper>
 
-                            </Select>
-                        </FormControl>
+                            <SPS.AdressFieldsWrapper onSubmit={() => this.handleDeliveryAdressSave("entrega")}>
+                                <h5>Endereço de Entrega</h5>
+                                <FormControl style={{minWidth: 120}}>
+                                    <InputLabel>Logradouro</InputLabel>
+                                    <Select
+                                        name="deliveryLogradouro"
+                                        value={this.state.deliveryLogradouro}
+                                        onChange={this.handleFieldChange}
+                                        required
+                                    >
+                                        {logradouroList.map((item, index) => {
+                                            return (
+                                                <MenuItem key={index} value={item}>
+                                                    <div key={index}>{item}</div>
+                                                </MenuItem>
+                                            );
+                                        })}
 
-                        <TextField
-                            onChange={this.handleFieldChange}
-                            name="cep"
-                            type="text"
-                            label="Cep"
-                            required
-                            value={cep}
-                        />
+                                    </Select>
+                                </FormControl>
+                                <TextField
+                                    onChange={this.handleFieldChange}
+                                    name="deliveryCep"
+                                    type="text"
+                                    label="Cep"
+                                    required
+                                    value={this.state.deliveryCep}
+                                />
 
-                        <TextField
-                            onChange={this.handleFieldChange}
-                            name="endereco"
-                            type="text"
-                            label="Endereço"
-                            required
-                            value={endereco}
-                        />
+                                <TextField
+                                    onChange={this.handleFieldChange}
+                                    name="deliveryEndereco"
+                                    type="text"
+                                    label="Endereço"
+                                    required
+                                    value={this.state.deliveryEndereco}
+                                />
 
-                        <TextField
-                            onChange={this.handleFieldChange}
-                            name="bairro"
-                            type="text"
-                            label="Bairro"
-                            required
-                            value={bairro}
-                        />
+                                <TextField
+                                    onChange={this.handleFieldChange}
+                                    name="deliveryBairro"
+                                    type="text"
+                                    label="Bairro"
+                                    required
+                                    value={this.state.deliveryBairro}
+                                />
 
-                        <TextField
-                            onChange={this.handleFieldChange}
-                            name="numero"
-                            type="number"
-                            label="Numero"
-                            required
-                            value={numero}
-                        />
+                                <TextField
+                                    onChange={this.handleFieldChange}
+                                    name="deliveryNumero"
+                                    type="number"
+                                    label="Numero"
+                                    required
+                                    value={this.state.deliveryNumero}
+                                />
 
-                        <TextField
-                            onChange={this.handleFieldChange}
-                            name="complemento"
-                            type="text"
-                            label="Complemento"
-                            required
-                            value={complemento}
-                        />
+                                <TextField
+                                    onChange={this.handleFieldChange}
+                                    name="deliveryComplemento"
+                                    type="text"
+                                    label="Complemento"
+                                    required
+                                    value={this.state.deliveryComplemento}
+                                />
+                            </SPS.AdressFieldsWrapper>
+
+
+                            <SPS.AdressFieldsWrapper onSubmit={() => this.handlePaymentAdressSave("cobranca")}>
+                                <h5>Endereço de Cobrança</h5>
+                                <FormControl style={{minWidth: 120}}>
+                                    <InputLabel>Logradouro</InputLabel>
+                                    <Select
+                                        name="paymentLogradouro"
+                                        value={this.state.paymentLogradouro}
+                                        onChange={this.handleFieldChange}
+                                        required
+                                    >
+                                        {logradouroList.map((item, index) => {
+                                            return (
+                                                <MenuItem key={index} value={item}>
+                                                    <div key={index}>{item}</div>
+                                                </MenuItem>
+                                            );
+                                        })}
+
+                                    </Select>
+                                </FormControl>
+                                <TextField
+                                    onChange={this.handleFieldChange}
+                                    name="paymentCep"
+                                    type="text"
+                                    label="Cep"
+                                    required
+                                    value={this.state.paymentCep}
+                                />
+
+                                <TextField
+                                    onChange={this.handleFieldChange}
+                                    name="paymentEndereco"
+                                    type="text"
+                                    label="Endereço"
+                                    required
+                                    value={this.state.paymentEndereco}
+                                />
+
+                                <TextField
+                                    onChange={this.handleFieldChange}
+                                    name="paymentBairro"
+                                    type="text"
+                                    label="Bairro"
+                                    required
+                                    value={this.state.paymentBairro}
+                                />
+
+                                <TextField
+                                    onChange={this.handleFieldChange}
+                                    name="paymentNumero"
+                                    type="number"
+                                    label="Numero"
+                                    required
+                                    value={this.state.paymentNumero}
+                                />
+
+                                <TextField
+                                    onChange={this.handleFieldChange}
+                                    name="paymentComplemento"
+                                    type="text"
+                                    label="Complemento"
+                                    required
+                                    value={this.state.paymentComplemento}
+                                />
+                            </SPS.AdressFieldsWrapper>
+                        </SPS.AdressWrapper>
+                        <SPS.CreditCardWrapper>
+                            <Cards
+                                cvc={this.state.cvc}
+                                expiry={this.state.expiry}
+                                focused={this.state.focus}
+                                name={this.state.name}
+                                number={this.state.number}
+                            />
+
+                            <SPS.CreditCardFieldsWrapper>
+                                <input
+                                    type="tel"
+                                    name="number"
+                                    placeholder="Numero do Cartão"
+                                    onChange={this.handleFieldChange}
+                                    onFocus={this.handleInputFocus}
+                                    required
+                                    autoComplete="off"
+                                />
+
+                                <input
+                                    type="text"
+                                    name="name"
+                                    placeholder="Nome"
+                                    onChange={this.handleFieldChange}
+                                    onFocus={this.handleInputFocus}
+                                    required
+                                />
+
+                                <input
+                                    type="text"
+                                    name="expiry "
+                                    placeholder="Validade"
+                                    onChange={this.handleFieldChange}
+                                    onFocus={this.handleInputFocus}
+                                    required
+                                />
+
+                                <input
+                                    type="text"
+                                    name="cvc "
+                                    placeholder="CVC"
+                                    onChange={this.handleFieldChange}
+                                    onFocus={this.handleInputFocus}
+                                    required
+                                />
+                            </SPS.CreditCardFieldsWrapper>
+                        </SPS.CreditCardWrapper>
 
                         <Button variant="contained" type="submit">Salvar</Button>
 

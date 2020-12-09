@@ -12,7 +12,6 @@ export const routes = {
     LoginPage: "/login",
     SignupPage: "/signup",
 
-    // Outras rotas aqui
 };
 
 function Router(props) {

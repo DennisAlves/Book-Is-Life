@@ -34,10 +34,10 @@ export default function BookSimple(props) {
                     <Typography gutterBottom variant="body2" component="p" style={{ height: 66}}>
                         {props.bookTitle}
                     </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
+                    <Typography variant="body1" color="textSecondary" component="p">
                         {props.author}
                     </Typography>
-                    <Typography variant="body3" color="red" component="p">
+                    <Typography variant="body2" color="textPrimary" component="p">
                         R$ {props.value}
                     </Typography>
                 </CardContent>
