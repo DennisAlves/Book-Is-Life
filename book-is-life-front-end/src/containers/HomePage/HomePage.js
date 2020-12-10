@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { push } from "connected-react-router";
 import { routes } from '../Router';
 import Paper from '@material-ui/core/Paper';
-import BookSimple from "../Book Simple/BookSimple";
+import BookSimple from "../Components/Book Simple/BookSimple";
 import Image from "../Images/hobbit.jpg"
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
