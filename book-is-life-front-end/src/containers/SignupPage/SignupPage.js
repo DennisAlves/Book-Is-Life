@@ -1,11 +1,10 @@
 import React, {Component} from "react";
 import * as SPS from "./SignupPageStyles";
 import {IconButton, InputAdornment, TextField} from "@material-ui/core";
-import {connect} from "react-redux";
+import Paper from '@material-ui/core/Paper';
 import {push} from "connected-react-router";
 import {routes} from '../Router';
-import Paper from '@material-ui/core/Paper';
-import Button from "@material-ui/core/Button";
+import {connect} from "react-redux";
 import InputMask from "react-input-mask";
 import 'react-phone-input-2/lib/style.css'
 import Visibility from "@material-ui/icons/Visibility";
@@ -23,28 +22,30 @@ class LoginPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            currentStep: 1,
             email: "",
             senha: "",
             nomeCliente: "",
+            dtNascimento: "",
+            cpf: "",
             testeSenha: "",
+            tipoTelefone: "",
             telefone: "",
             mostrarSenha: false,
-            entregaLogradouro: "",
-            entregaCep: "",
-            entregaEndereco: "",
-            entregaBairro: "",
-            entregaNumero: "",
-            entregaComplemento: "",
-            cobrancaLogradouro: "",
-            cobrancaCep: "",
-            cobrancaEndereco: "",
-            cobrancaBairro: "",
-            cobrancaNumero: "",
-            cobrancaComplemento: "",
-            tipoDeEndereco: "",
+            genero: "",
+            descricaoEndereco: "",
+            tipoLogradouro: "",
+            cep: "",
+            logradouro: "",
+            bairro: "",
+            numero: "",
+            cidade: "",
+            uf: "",
+            complemento: "",
+            tipoDeResidencia: "",
             listaDeEndereco: [],
             cvc: "",
-            exp: "",
+            expiry: "",
             foco: "",
             name: "",
             number: "",
@@ -61,24 +62,20 @@ class LoginPage extends Component {
 
     handleInputFocus = (e) => {
         const target = e.target;
-
         this.setState({
             focused: target.name,
         });
     };
 
     handleFieldChange = (event) => {
-        const {name,value} = event.target;
+        const {name, value} = event.target;
         this.setState({
             [name]: value,
         }, (() => {
-            if (name === "entregaCep") {
-                this.handleCepFillUp(this.state.entregaCep)
+            if (name === "cep") {
+                this.handleCepFillUp(this.state.cep)
             }
-            else if (name === "cobrancaCep") {
-                this.handleCepFillUp(this.state.cobrancaCep)
-            }
-                }));
+        }));
     };
 
     handleInputChange = (e) => {
@@ -108,7 +105,7 @@ class LoginPage extends Component {
         console.log(this.state.teste)
     };
     handleCepFillUp = (cepUnformaded) => {
-        const cep = cepUnformaded.replace(/[-_]/g,"")
+        const cep = cepUnformaded.replace(/[-_]/g, "")
 
         console.log(cep, cep.length)
         if (cep.length === 8) {
@@ -121,11 +118,13 @@ class LoginPage extends Component {
 
             request.then((response) => {
                 console.log(response.data)
-                   this.setState({
-                       entregaLogradouro: response.data.logradouro.substr(0, response.data.logradouro.indexOf(" ")),
-                       entregaEndereco: response.data.logradouro.substr(response.data.logradouro.indexOf(" ") + 1),
-                       entregaBairro: response.data.bairro,
-                   })
+                this.setState({
+                    tipoLogradouro: response.data.logradouro.substr(0, response.data.logradouro.indexOf(" ")),
+                    logradouro: response.data.logradouro.substr(response.data.logradouro.indexOf(" ") + 1),
+                    bairro: response.data.bairro,
+                    cidade: response.data.localidade,
+                    uf: response.data.uf,
+                })
             }).catch((err) => {
                 console.log(err)
             })
@@ -138,50 +137,54 @@ class LoginPage extends Component {
             this.setState({mostrarSenha: false});
         }
     };
-    handleDeliveryAdressSave = (tipoDeEndereco) => {
-        const endereco = {
-            logradouro: this.state.entregaLogradouro,
-            cep: this.state.entregaCep,
-            endereco: this.state.entregaEndereco,
-            bairro: this.state.entregaBairro,
-            numero: this.state.entregaNumero,
-            complemento: this.state.entregaComplemento,
-            tipoDeEndereco: tipoDeEndereco,
-        }
-        this.setState({
-            adressList: [...this.state.listaDeEndereco, endereco],
-        })
-    }
-    handlePaymentAdressSave = (tipoDeEndereco) => {
-        const endereco = {
-            logradouro: this.state.cobrancaLogradouro,
-            cep: this.state.cobrancaCep,
-            endereco: this.state.cobrancaEndereco,
-            bairro: this.state.cobrancaBairro,
-            numero: this.state.cobrancaNumero,
-            complemento: this.state.cobrancaComplemento,
-            tipoDeEndereco: tipoDeEndereco,
-        }
-        this.setState({
-            adressList: [...this.state.listaDeEndereco, endereco],
-        })
 
+    handleAdressSave = (tipoDeEndereco) => {
+        const endereco = {
+            logradouro: this.state.logradouro,
+            cep: this.state.cep,
+            endereco: this.state.endereco,
+            bairro: this.state.bairro,
+            numero: this.state.numero,
+            complemento: this.state.complemento,
+            tipoDeEndereco: tipoDeEndereco,
+        }
+        this.setState({
+            adressList: [...this.state.listaDeEndereco, endereco],
+        })
     }
+
 
     render() {
         const {
             email,
             senha,
             nomeCliente,
+            cpf,
             testeSenha,
             telefone,
             mostrarSenha,
+            genero,
             name,
             number,
             expiry,
             cvc,
-            focused
+            focused,
+            descricaoEndereco,
+            tipoLogradouro,
+            tipoDeResidencia,
+            cep,
+            logradouro,
+            bairro,
+            numero,
+            cidade,
+            uf,
+            complemento,
+            tipoTelefone,
+            dtNascimento,
         } = this.state;
+
+        const tipoDeTelefoneList = ["Residencial", "Celular", "Comercial", "Recado"]
+        const tipoGeneroList = ["Masculino", "Feminino", "Não declarado"]
         const logradouroList = [
             "Aeroporto",
             "Alameda",
@@ -227,6 +230,36 @@ class LoginPage extends Component {
             "Viela",
             "Vila"
         ];
+        const tipoResidenciaList = ["Casa", "Apartamento", "Residencial"]
+        const ufList = [
+            {uf: "AC", nome: "Acre"},
+            {uf: "AL", nome: "Alagoas"},
+            {uf: "AP", nome: "Amapá"},
+            {uf: "AM", nome: "Amazonas"},
+            {uf: "BA", nome: "Bahia"},
+            {uf: "CE", nome: "Ceará"},
+            {uf: "DF", nome: "Distrito Federal"},
+            {uf: "ES", nome: "Espírito Santo"},
+            {uf: "GO", nome: "Goiás"},
+            {uf: "MA", nome: "Maranhão"},
+            {uf: "MT", nome: "Mato Grosso"},
+            {uf: "MS", nome: "Mato Grosso do Sul"},
+            {uf: "MG", nome: "Minas Gerais"},
+            {uf: "PA", nome: "Pará"},
+            {uf: "PB", nome: "Paraíba"},
+            {uf: "PR", nome: "Paraná"},
+            {uf: "PE", nome: "Pernambuco"},
+            {uf: "PI", nome: "Piauí"},
+            {uf: "RJ", nome: "Rio de Janeiro"},
+            {uf: "RN", nome: "Rio Grande do Norte"},
+            {uf: "RS", nome: "Rio Grande do Sul"},
+            {uf: "RO", nome: "Rondônia"},
+            {uf: "RR", nome: "Roraima"},
+            {uf: "SC", nome: "Santa Catarina"},
+            {uf: "SP", nome: "São Paulo"},
+            {uf: "SE", nome: "Sergipe"},
+            {uf: "TO", nome: "Tocantins"}
+        ];
 
         return (
             <>
@@ -240,13 +273,10 @@ class LoginPage extends Component {
 
                     <SPS.SignupWrapper>
                         <h4>Dados para cadastro</h4>
+
                         <SPS.ClientWrapper>
                             <SPS.ClientFieldsWrapper>
                                 <TextField
-                                    inputProps={{
-                                        pattern: "[a-zA-Z.]{6,16}",
-                                        title: "O Nome precisa ter entre 6 e 16 caracteres alfanumericos."
-                                    }}
                                     onChange={this.handleFieldChange}
                                     name="nomeCliente"
                                     type="text"
@@ -263,6 +293,51 @@ class LoginPage extends Component {
                                     required
                                     value={email}
                                 />
+
+                                <TextField
+                                    onChange={this.handleFieldChange}
+                                    name="dtNascimento"
+                                    type="date"
+                                    label="Data de Nascimento"
+                                    required
+                                    value={dtNascimento}
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                />
+
+                                <FormControl style={{minWidth: 120}}>
+                                    <InputLabel>Genero</InputLabel>
+                                    <Select
+                                        name="genero"
+                                        value={genero}
+                                        onChange={this.handleFieldChange}
+                                        required
+                                    >
+                                        {tipoGeneroList.map((item, index) => {
+                                            return (
+                                                <MenuItem key={index} value={item}>
+                                                    <div key={index}>{item}</div>
+                                                </MenuItem>
+                                            );
+                                        })}
+
+                                    </Select>
+                                </FormControl>
+
+                                <InputMask
+                                    mask="999.999.999-99"
+                                    value={cpf}
+                                    onChange={this.handleFieldChange}
+                                >
+                                    <TextField
+                                        name="cpf"
+                                        type="text"
+                                        label="CPF"
+                                        required
+                                    />
+                                </InputMask>
+
 
                                 <TextField
 
@@ -313,12 +388,30 @@ class LoginPage extends Component {
                                     type={mostrarSenha ? "text" : "password"}
                                     label="Digite novamente a senha"
                                     required
-                                    error={this.state.senha !== this.state.testeSenha}
-                                    helperText={this.state.senha !== this.state.testeSenha ? "senhas divergentes" : ""}
+                                    error={senha !== testeSenha}
+                                    helperText={senha !== testeSenha ? "senhas divergentes" : ""}
                                     value={testeSenha}
                                 />
+                                <FormControl style={{minWidth: 120}}>
+                                    <InputLabel>Tipo de telefone</InputLabel>
+                                    <Select
+                                        name="tipoTelefone"
+                                        value={tipoTelefone}
+                                        onChange={this.handleFieldChange}
+                                        required
+                                    >
+                                        {tipoDeTelefoneList.map((item, index) => {
+                                            return (
+                                                <MenuItem key={index} value={item}>
+                                                    <div key={index}>{item}</div>
+                                                </MenuItem>
+                                            );
+                                        })}
+
+                                    </Select>
+                                </FormControl>
                                 <InputMask
-                                    mask="9999999-9999"
+                                    mask="(99)99999-9999"
                                     value={telefone}
                                     onChange={this.handleFieldChange}
                                 >
@@ -329,16 +422,60 @@ class LoginPage extends Component {
                                         type="tel"
                                     />
                                 </InputMask>
+
                             </SPS.ClientFieldsWrapper>
                         </SPS.ClientWrapper>
+
                         <SPS.AdressWrapper>
-                            <SPS.AdressFieldsWrapper onSubmit={() => this.handleDeliveryAdressSave("entrega")}>
-                                <h5>Endereço de Entrega</h5>
+                            <SPS.AdressFieldsWrapper>
+                                <h5>Endereço</h5>
+
+                                <TextField
+                                    onChange={this.handleFieldChange}
+                                    name="descricaoEndereco"
+                                    type="text"
+                                    label="Descriçâo do Endereco"
+                                    required
+                                    value={descricaoEndereco}
+                                />
+
+                                <InputMask
+                                    mask="99999-999"
+                                    value={cep}
+                                    onChange={this.handleFieldChange}
+                                >
+                                    <TextField
+                                        name="cep"
+                                        type="text"
+                                        label="Cep"
+                                        required
+                                    />
+                                </InputMask>
+
+                                <FormControl style={{minWidth: 120}}>
+                                    <InputLabel>Tipo de Residencia</InputLabel>
+                                    <Select
+                                        name="tipoDeResidencia"
+                                        value={tipoDeResidencia}
+                                        onChange={this.handleFieldChange}
+                                        required
+                                    >
+                                        {tipoResidenciaList.map((item, index) => {
+                                            return (
+                                                <MenuItem key={index} value={item}>
+                                                    <div key={index}>{item}</div>
+                                                </MenuItem>
+                                            );
+                                        })}
+
+                                    </Select>
+                                </FormControl>
+
                                 <FormControl style={{minWidth: 120}}>
                                     <InputLabel>Logradouro</InputLabel>
                                     <Select
-                                        name="entregaLogradouro"
-                                        value={this.state.entregaLogradouro}
+                                        name="tipoLogradouro"
+                                        value={tipoLogradouro}
                                         onChange={this.handleFieldChange}
                                         required
                                     >
@@ -353,125 +490,72 @@ class LoginPage extends Component {
                                     </Select>
                                 </FormControl>
 
-                                <InputMask
-                                    mask="99999-999"
-                                    value={this.state.entregaCep}
-                                    onChange={this.handleFieldChange}
-                                >
-                                    <TextField
-                                        name="entregaCep"
-                                        type="text"
-                                        label="Cep"
-                                        required
-                                    />
-                                </InputMask>
+
 
                                 <TextField
                                     onChange={this.handleFieldChange}
-                                    name="entregaEndereco"
+                                    name="logradouro"
                                     type="text"
                                     label="Endereço"
                                     required
-                                    value={this.state.entregaEndereco}
+                                    value={logradouro}
                                 />
 
                                 <TextField
                                     onChange={this.handleFieldChange}
-                                    name="entregaBairro"
-                                    type="text"
-                                    label="Bairro"
-                                    required
-                                    value={this.state.entregaBairro}
-                                />
-
-                                <TextField
-                                    onChange={this.handleFieldChange}
-                                    name="deliveryNumero"
+                                    name="numero"
                                     type="number"
                                     label="Numero"
                                     required
-                                    value={this.state.deliveryNumero}
+                                    value={numero}
                                 />
 
                                 <TextField
                                     onChange={this.handleFieldChange}
-                                    name="entregaComplemento"
+                                    name="bairro"
+                                    type="text"
+                                    label="Bairro"
+                                    required
+                                    value={bairro}
+                                />
+
+                                <TextField
+                                    onChange={this.handleFieldChange}
+                                    name="complemento"
                                     type="text"
                                     label="Complemento"
-                                    value={this.state.entregaComplemento}
+                                    value={complemento}
                                 />
-                            </SPS.AdressFieldsWrapper>
-                            <SPS.AdressFieldsWrapper onSubmit={() => this.handlePaymentAdressSave("cobranca")}>
-                                <h5>Endereço de Cobrança</h5>
+                                <TextField
+                                    onChange={this.handleFieldChange}
+                                    name="cidade"
+                                    type="text"
+                                    label="Cidade"
+                                    value={cidade}
+                                    required
+                                />
                                 <FormControl style={{minWidth: 120}}>
-                                    <InputLabel>Logradouro</InputLabel>
+                                    <InputLabel>Estado</InputLabel>
                                     <Select
-                                        name="cobrancaLogradouro"
-                                        value={this.state.cobrancaLogradouro}
+                                        name="uf"
+                                        value={uf}
                                         onChange={this.handleFieldChange}
                                         required
                                     >
-                                        {logradouroList.map((item, index) => {
+                                        {ufList.map((item, index) => {
                                             return (
-                                                <MenuItem key={index} value={item}>
-                                                    <div key={index}>{item}</div>
+                                                <MenuItem key={index} value={item.uf}>
+                                                    <div key={index}>{item.nome}</div>
                                                 </MenuItem>
                                             );
                                         })}
 
                                     </Select>
                                 </FormControl>
-                                <InputMask
-                                    mask="99999-999"
-                                    value={this.state.cobrancaCep}
-                                    onChange={this.handleFieldChange}
-                                >
-                                    <TextField
-                                        name="cobrancaCep"
-                                        type="text"
-                                        label="Cep"
-                                        required
-                                    />
-                                </InputMask>
-
-
-                                <TextField
-                                    onChange={this.handleFieldChange}
-                                    name="cobrancaEndereco"
-                                    type="text"
-                                    label="Endereço"
-                                    required
-                                    value={this.state.cobrancaEndereco}
-                                />
-
-                                <TextField
-                                    onChange={this.handleFieldChange}
-                                    name="cobrancaBairro"
-                                    type="text"
-                                    label="Bairro"
-                                    required
-                                    value={this.state.cobrancaBairro}
-                                />
-
-                                <TextField
-                                    onChange={this.handleFieldChange}
-                                    name="cobrancaNumero"
-                                    type="number"
-                                    label="Numero"
-                                    autoComplete="nope"
-                                    required
-                                    value={this.state.cobrancaNumero}
-                                />
-
-                                <TextField
-                                    onChange={this.handleFieldChange}
-                                    name="cobrancaComplemento"
-                                    type="text"
-                                    label="Complemento"
-                                    value={this.state.cobrancaComplemento}
-                                />
                             </SPS.AdressFieldsWrapper>
+
                         </SPS.AdressWrapper>
+
                         <SPS.CreditCardWrapper>
                             <Cards
                                 locale={{valid: "Valido até"}}
@@ -522,8 +606,6 @@ class LoginPage extends Component {
                                 />
                             </SPS.CreditCardFieldsWrapper>
                         </SPS.CreditCardWrapper>
-
-                        <Button variant="contained" type="submit">Salvar</Button>
 
                     </SPS.SignupWrapper>
 

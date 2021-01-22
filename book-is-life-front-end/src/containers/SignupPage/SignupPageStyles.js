@@ -31,7 +31,7 @@ export const Footer = styled.div`
     text-align: center;
 `
 
-export const SignupWrapper = styled.form`
+export const SignupWrapper = styled.div`
     width: 100%;
     height: max-content;
     gap: 10px;
@@ -41,7 +41,7 @@ export const SignupWrapper = styled.form`
     padding-bottom: 20px;
 `;
 
-export const ClientWrapper = styled.div`
+export const ClientWrapper = styled.form`
 
 `
 export const ClientFieldsWrapper = styled.div`
@@ -50,7 +50,7 @@ export const ClientFieldsWrapper = styled.div`
   gap: 10px;
 `
 
-export const AdressWrapper = styled.div`
+export const AdressWrapper = styled.form`
   display: flex;
   gap: 10px;
 `
@@ -59,7 +59,7 @@ export const AdressFieldsWrapper = styled.div`
   flex-direction: column;
   gap: 10px;
 `
-export const CreditCardWrapper = styled.div`
+export const CreditCardWrapper = styled.form`
   display: flex;
   gap: 10px;
 `
@@ -68,4 +68,7 @@ export const CreditCardFieldsWrapper = styled.div`
   flex-direction: column;
   gap: 10px;
 `
-
+export const CheckboxWrapper = styled.div`
+  display: flex;
+  gap: 10px;
+`
