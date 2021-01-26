@@ -31,7 +31,7 @@ export const Footer = styled.div`
     text-align: center;
 `
 
-export const SignupWrapper = styled.div`
+export const SignupWrapper = styled.form`
     width: 100%;
     height: max-content;
     gap: 10px;
