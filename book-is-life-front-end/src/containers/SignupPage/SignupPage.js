@@ -1,14 +1,11 @@
 import React, {Component} from "react";
 import * as SPS from "./SignupPageStyles";
-import {Button, IconButton, InputAdornment, TextField} from "@material-ui/core";
+import {Button,TextField} from "@material-ui/core";
 import Paper from '@material-ui/core/Paper';
 import {push} from "connected-react-router";
 import {routes} from '../Router';
 import {connect} from "react-redux";
 import InputMask from "react-input-mask";
-import 'react-phone-input-2/lib/style.css'
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -16,6 +13,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Cards from 'react-credit-cards';
 import 'react-credit-cards/es/styles-compiled.css';
 import axios from "axios";
+import CadastroCliente from "../Components/CadastroCliente/CadastroCliente"
+
 
 class SignupPage extends Component {
     constructor(props) {
@@ -51,7 +50,9 @@ class SignupPage extends Component {
             focused: "",
             error: false,
             errorMessage: {},
-            emailIsOk:false,
+            emailIsOk: false,
+            passwordIsOk: false,
+            isCell: true,
         };
     }
 
@@ -72,6 +73,8 @@ class SignupPage extends Component {
                     this.handleCepFillUp(this.state.cep)
                 } else if (name === "email") {
                     this.emailIsValid(this.state.email)
+                } else if (name === "senha") {
+                    this.passwordIsValid(this.state.senha)
                 }
             })
         );
@@ -207,15 +210,27 @@ class SignupPage extends Component {
         if (this.state.email !== undefined) {
             if (regex.test(this.state.email)) {
 
-                this.setState({ emailIsOk: true})
-            }
-            else if (!regex.test(this.state.email)) {
+                this.setState({emailIsOk: true})
+            } else if (!regex.test(this.state.email)) {
 
-                this.setState({ emailIsOk: false})
+                this.setState({emailIsOk: false})
             }
         }
         return this.state.emailIsOk;
     }
+    passwordIsValid = (senha) => {
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/g;
+
+        if (senha !== undefined) {
+            if (regex.test(senha)) {
+                this.setState({passwordIsOk: true})
+            } else if (!regex.test(senha)) {
+                this.setState({passwordIsOk: false})
+            }
+        }
+        return this.state.passwordIsOk;
+    }
+
 
     render() {
         const {
@@ -245,7 +260,8 @@ class SignupPage extends Component {
             tipoTelefone,
             dtNascimento,
             errorMessage,
-            emailIsOk
+            emailIsOk,
+            passwordIsOk,
         } = this.state;
 
 
@@ -262,7 +278,7 @@ class SignupPage extends Component {
                     <SPS.SignupWrapper>
                         <h4>Dados para cadastro</h4>
 
-                        <ClientDataFields
+                        <CadastroCliente
                             currentStep={this.state.currentStep}
                             handleFieldChange={this.handleFieldChange}
                             nomeCliente={nomeCliente}
@@ -273,6 +289,7 @@ class SignupPage extends Component {
                             senha={senha}
                             testeSenha={testeSenha}
                             mostrarSenha={mostrarSenha}
+                            passwordIsOk={passwordIsOk}
                             telefone={telefone}
                             tipoTelefone={tipoTelefone}
                             genero={genero}
@@ -322,173 +339,6 @@ class SignupPage extends Component {
     };
 }
 
-function ClientDataFields(props) {
-    if (props.currentStep !== 1) {
-        return null
-    }
-
-    const tipoDeTelefoneList = ["Residencial", "Celular", "Comercial", "Recado"]
-    const tipoGeneroList = ["Masculino", "Feminino", "Não declarado"]
-    return (
-        <SPS.ClientWrapper>
-            <SPS.ClientFieldsWrapper>
-                <TextField
-                    onChange={props.handleFieldChange}
-                    name="nomeCliente"
-                    type="text"
-                    label="Nome"
-                    value={props.nomeCliente}
-                    required
-                    error={props.nomeCliente.length < 5}
-                    helperText={props.nomeCliente.length < 5 ? "Digite um nome  com mais de 4 letras" : ""}
-                />
-
-                <TextField
-                    onChange={props.handleFieldChange}
-                    name="email"
-                    type="email"
-                    label="E-mail"
-                    required
-                    value={props.email}
-                    error={!props.emailError}
-                    helperText={!props.emailError? "Digite um email valido" : ""}
-
-                />
-
-                <TextField
-                    onChange={props.handleFieldChange}
-                    name="dtNascimento"
-                    type="date"
-                    label="Data de Nascimento"
-                    required
-                    value={props.dtNascimento}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                />
-
-                <FormControl style={{minWidth: 120}}>
-                    <InputLabel>Genero</InputLabel>
-                    <Select
-                        name="genero"
-                        value={props.genero}
-                        onChange={props.handleFieldChange}
-                        required
-                    >
-                        {tipoGeneroList.map((item, index) => {
-                            return (
-                                <MenuItem key={index} value={item}>
-                                    <div key={index}>{item}</div>
-                                </MenuItem>
-                            );
-                        })}
-
-                    </Select>
-                </FormControl>
-
-                <InputMask
-                    mask="999.999.999-99"
-                    value={props.cpf}
-                    onChange={props.handleFieldChange}
-                >
-                    <TextField
-                        name="cpf"
-                        type="text"
-                        label="CPF"
-                        required
-                    />
-                </InputMask>
-
-
-                <TextField
-
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton
-                                    aria-label="toggle password visibility"
-                                    onMouseDown={props.handleMouseDownPassword}
-                                    onMouseUp={props.handleMouseDownPassword}
-                                >
-                                    {props.mostrarSenha ? <Visibility/> : <VisibilityOff/>}
-                                </IconButton>
-                            </InputAdornment>
-                        ),
-                        pattern: "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$",
-                        title: "A senha precisa ter entre 6 e 16 caracteres alfanumericos.",
-                        autoComplete: 'new-password',
-                    }}
-                    name="senha"
-                    label="Senha"
-                    required
-                    value={props.senha}
-                    type={props.mostrarSenha ? "text" : "password"}
-                    onChange={props.handleFieldChange}
-
-                />
-
-                <TextField
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton
-                                    aria-label="toggle password visibility"
-                                    onMouseDown={props.handleMouseDownPassword}
-                                    onMouseUp={props.handleMouseDownPassword}
-                                >
-                                    {props.mostrarSenha ? <Visibility/> : <VisibilityOff/>}
-                                </IconButton>
-                            </InputAdornment>
-                        ),
-                        pattern: "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$",
-                        title: "A senha precisa ter entre 6 e 16 caracteres alfanumericos.",
-                        autoComplete: 'new-password',
-                    }}
-                    onChange={props.handleFieldChange}
-                    name="testeSenha"
-                    type={props.mostrarSenha ? "text" : "password"}
-                    label="Digite novamente a senha"
-                    required
-                    error={props.senha !== props.testeSenha}
-                    helperText={props.senha !== props.testeSenha ? "senhas divergentes" : ""}
-                    value={props.testeSenha}
-                />
-                <FormControl style={{minWidth: 120}}>
-                    <InputLabel>Tipo de telefone</InputLabel>
-                    <Select
-                        name="tipoTelefone"
-                        value={props.tipoTelefone}
-                        onChange={props.handleFieldChange}
-                        required
-                    >
-                        {tipoDeTelefoneList.map((item, index) => {
-                            return (
-                                <MenuItem key={index} value={item}>
-                                    <div key={index}>{item}</div>
-                                </MenuItem>
-                            );
-                        })}
-
-                    </Select>
-                </FormControl>
-                <InputMask
-                    mask="(99)99999-9999"
-                    value={props.telefone}
-                    onChange={props.handleFieldChange}
-                >
-                    <TextField
-                        name="telefone"
-                        required
-                        label="Telefone"
-                        type="tel"
-                    />
-                </InputMask>
-
-            </SPS.ClientFieldsWrapper>
-        </SPS.ClientWrapper>
-    )
-
-}
 
 function AdressDataFields(props) {
     if (props.currentStep !== 2) {

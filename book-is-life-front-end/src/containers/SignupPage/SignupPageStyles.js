@@ -31,7 +31,7 @@ export const Footer = styled.div`
     text-align: center;
 `
 
-export const SignupWrapper = styled.form`
+export const SignupWrapper = styled.div`
     width: 100%;
     height: max-content;
     gap: 10px;
@@ -50,7 +50,7 @@ export const ClientFieldsWrapper = styled.div`
   gap: 10px;
 `
 
-export const AdressWrapper = styled.form`
+export const AdressWrapper = styled.div`
   display: flex;
   gap: 10px;
 `
@@ -59,7 +59,7 @@ export const AdressFieldsWrapper = styled.div`
   flex-direction: column;
   gap: 10px;
 `
-export const CreditCardWrapper = styled.form`
+export const CreditCardWrapper = styled.div`
   display: flex;
   gap: 10px;
 `
