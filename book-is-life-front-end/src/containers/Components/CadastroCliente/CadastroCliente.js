@@ -1,7 +1,6 @@
 import React from "react";
 import * as CCS from "../CadastroCliente/CadastroClienteStyles";
-import {IconButton, InputAdornment} from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
+import {IconButton, InputAdornment, TextField} from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
@@ -16,13 +15,14 @@ export default function ClientDataFields(props) {
         return null
     }
 
-    let typeTel
+    let typeTel , maskFormat
     if (props.tipoTelefone === "" || props.tipoTelefone !== "Celular") {
         typeTel = 10
+        maskFormat = "(99)9999-9999"
     } else {
         typeTel = 11
+        maskFormat = "(99)99999-9999"
     }
-    console.log(typeTel);
     const CPF = require('cpf');
     const tipoDeTelefoneList = ["Residencial", "Celular", "Comercial", "Recado"]
     const tipoGeneroList = ["Masculino", "Feminino", "Não declarado"]
@@ -170,17 +170,20 @@ export default function ClientDataFields(props) {
                     </Select>
                 </FormControl>
 
-
-                <TextField
-                    name="telefone"
-                    label="Telefone"
-                    type="tel"
-                    required
+                <InputMask
+                    mask={maskFormat}
                     value={props.telefone}
                     onChange={props.handleFieldChange}
-                    error={props.telefone.length !== typeTel}
-                    helperText={props.telefone.length !== typeTel ? "o numero digitado não está correto" : ""}
-                />
+                >
+                    <TextField
+                        name="telefone"
+                        label="Telefone"
+                        type="tel"
+                        required
+                        error={props.telefone.replace(/[-_()]/g, "").length !== typeTel}
+                        helperText={props.telefone.replace(/[-_()]/g, "").length !== typeTel ? "o numero digitado não está correto" : ""}
+                    />
+                </InputMask>
             </CCS.ClientFieldsWrapper>
         </CCS.ClientWrapper>
     )
