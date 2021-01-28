@@ -1,20 +1,15 @@
 import React, {Component} from "react";
 import * as SPS from "./SignupPageStyles";
-import {Button,TextField} from "@material-ui/core";
+import {Button} from "@material-ui/core";
 import Paper from '@material-ui/core/Paper';
 import {push} from "connected-react-router";
 import {routes} from '../Router';
 import {connect} from "react-redux";
-import InputMask from "react-input-mask";
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
 import Cards from 'react-credit-cards';
 import 'react-credit-cards/es/styles-compiled.css';
 import axios from "axios";
 import CadastroCliente from "../Components/CadastroCliente/CadastroCliente"
-
+import CadastroEndereco from "../Components/CadastroEndereço/CadastroEndereco"
 
 class SignupPage extends Component {
     constructor(props) {
@@ -205,8 +200,7 @@ class SignupPage extends Component {
     }
 
     emailIsValid = () => {
-        const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
-
+        const regex = /^([\w-\.])+@([\w-]+\.)+[\w-]{3,4}$/g;
         if (this.state.email !== undefined) {
             if (regex.test(this.state.email)) {
 
@@ -252,11 +246,11 @@ class SignupPage extends Component {
             tipoDeResidencia,
             cep,
             logradouro,
+            complemento,
             bairro,
             numero,
             cidade,
             uf,
-            complemento,
             tipoTelefone,
             dtNascimento,
             errorMessage,
@@ -296,7 +290,7 @@ class SignupPage extends Component {
                             errorMessage={errorMessage}
                             handleMouseDownPassword={this.handleMouseDownPassword}
                         />
-                        <AdressDataFields
+                        <CadastroEndereco
                             currentStep={this.state.currentStep}
                             handleFieldChange={this.handleFieldChange}
                             descricaoEndereco={descricaoEndereco}
@@ -304,11 +298,11 @@ class SignupPage extends Component {
                             tipoDeResidencia={tipoDeResidencia}
                             cep={cep}
                             logradouro={logradouro}
+                            complemento={complemento}
                             bairro={bairro}
                             numero={numero}
                             cidade={cidade}
                             uf={uf}
-                            complemento={complemento}
                         />
                         <CrediCardDataFields
                             currentStep={this.state.currentStep}
@@ -339,218 +333,6 @@ class SignupPage extends Component {
     };
 }
 
-
-function AdressDataFields(props) {
-    if (props.currentStep !== 2) {
-        return null
-    }
-    const logradouroList = [
-        "Aeroporto",
-        "Alameda",
-        "Área",
-        "Avenida",
-        "Campo",
-        "Chácara",
-        "Colônia",
-        "Condomínio",
-        "Conjunto",
-        "Distrito",
-        "Esplanada",
-        "Estação",
-        "Estrada",
-        "Favela",
-        "Feira",
-        "Jardim",
-        "Ladeira",
-        "Lago",
-        "Lagoa",
-        "Largo",
-        "Loteamento",
-        "Morro",
-        "Núcleo",
-        "Parque",
-        "Passarela",
-        "Pátio",
-        "Praça",
-        "Quadra",
-        "Recanto",
-        "Residencial",
-        "Rodovia",
-        "Rua",
-        "Setor",
-        "Sítio",
-        "Travessa",
-        "Trecho",
-        "Trevo",
-        "Vale",
-        "Vereda",
-        "Via",
-        "Viaduto",
-        "Viela",
-        "Vila"
-    ];
-    const tipoResidenciaList = ["Casa", "Apartamento", "Residencial"]
-    const ufList = [
-        {uf: "AC", nome: "Acre"},
-        {uf: "AL", nome: "Alagoas"},
-        {uf: "AP", nome: "Amapá"},
-        {uf: "AM", nome: "Amazonas"},
-        {uf: "BA", nome: "Bahia"},
-        {uf: "CE", nome: "Ceará"},
-        {uf: "DF", nome: "Distrito Federal"},
-        {uf: "ES", nome: "Espírito Santo"},
-        {uf: "GO", nome: "Goiás"},
-        {uf: "MA", nome: "Maranhão"},
-        {uf: "MT", nome: "Mato Grosso"},
-        {uf: "MS", nome: "Mato Grosso do Sul"},
-        {uf: "MG", nome: "Minas Gerais"},
-        {uf: "PA", nome: "Pará"},
-        {uf: "PB", nome: "Paraíba"},
-        {uf: "PR", nome: "Paraná"},
-        {uf: "PE", nome: "Pernambuco"},
-        {uf: "PI", nome: "Piauí"},
-        {uf: "RJ", nome: "Rio de Janeiro"},
-        {uf: "RN", nome: "Rio Grande do Norte"},
-        {uf: "RS", nome: "Rio Grande do Sul"},
-        {uf: "RO", nome: "Rondônia"},
-        {uf: "RR", nome: "Roraima"},
-        {uf: "SC", nome: "Santa Catarina"},
-        {uf: "SP", nome: "São Paulo"},
-        {uf: "SE", nome: "Sergipe"},
-        {uf: "TO", nome: "Tocantins"}
-    ];
-
-    return (
-        <SPS.AdressWrapper>
-            <SPS.AdressFieldsWrapper>
-                <h5>Endereço</h5>
-
-                <TextField
-                    onChange={props.handleFieldChange}
-                    name="descricaoEndereco"
-                    type="text"
-                    label="Descriçâo do Endereco"
-                    required
-                    value={props.descricaoEndereco}
-                />
-
-                <InputMask
-                    mask="99999-999"
-                    value={props.cep}
-                    onChange={props.handleFieldChange}
-                >
-                    <TextField
-                        name="cep"
-                        type="text"
-                        label="Cep"
-                        required
-                    />
-                </InputMask>
-
-                <FormControl style={{minWidth: 120}}>
-                    <InputLabel>Tipo de Residencia</InputLabel>
-                    <Select
-                        name="tipoDeResidencia"
-                        value={props.tipoDeResidencia}
-                        onChange={props.handleFieldChange}
-                        required
-                    >
-                        {tipoResidenciaList.map((item, index) => {
-                            return (
-                                <MenuItem key={index} value={item}>
-                                    <div key={index}>{item}</div>
-                                </MenuItem>
-                            );
-                        })}
-
-                    </Select>
-                </FormControl>
-
-                <FormControl style={{minWidth: 120}}>
-                    <InputLabel>Logradouro</InputLabel>
-                    <Select
-                        name="tipoLogradouro"
-                        value={props.tipoLogradouro}
-                        onChange={props.handleFieldChange}
-                        required
-                    >
-                        {logradouroList.map((item, index) => {
-                            return (
-                                <MenuItem key={index} value={item}>
-                                    <div key={index}>{item}</div>
-                                </MenuItem>
-                            );
-                        })}
-
-                    </Select>
-                </FormControl>
-
-
-                <TextField
-                    onChange={props.handleFieldChange}
-                    name="logradouro"
-                    type="text"
-                    label="Endereço"
-                    required
-                    value={props.logradouro}
-                />
-
-                <TextField
-                    onChange={props.handleFieldChange}
-                    name="numero"
-                    type="number"
-                    label="Numero"
-                    required
-                    value={props.numero}
-                />
-
-                <TextField
-                    onChange={props.handleFieldChange}
-                    name="bairro"
-                    type="text"
-                    label="Bairro"
-                    required
-                    value={props.bairro}
-                />
-
-                <TextField
-                    onChange={props.handleFieldChange}
-                    name="complemento"
-                    type="text"
-                    label="Complemento"
-                    value={props.complemento}
-                />
-                <TextField
-                    onChange={props.handleFieldChange}
-                    name="cidade"
-                    type="text"
-                    label="Cidade"
-                    value={props.cidade}
-                    required
-                />
-                <FormControl style={{minWidth: 120}}>
-                    <InputLabel>Estado</InputLabel>
-                    <Select
-                        name="uf"
-                        value={props.uf}
-                        onChange={props.handleFieldChange}
-                        required
-                    >
-                        {ufList.map((item, index) => {
-                            return (
-                                <MenuItem key={index} value={item.uf}>
-                                    <div key={index}>{item.nome}</div>
-                                </MenuItem>
-                            );
-                        })}
-
-                    </Select>
-                </FormControl>
-            </SPS.AdressFieldsWrapper>
-
-        </SPS.AdressWrapper>
-    )
-}
 
 function CrediCardDataFields(props) {
     if (props.currentStep !== 3) {
