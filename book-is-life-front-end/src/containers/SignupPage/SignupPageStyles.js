@@ -41,16 +41,4 @@ export const SignupWrapper = styled.div`
     padding-bottom: 20px;
 `;
 
-export const CreditCardWrapper = styled.div`
-  display: flex;
-  gap: 10px;
-`
-export const CreditCardFieldsWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`
-export const CheckboxWrapper = styled.div`
-  display: flex;
-  gap: 10px;
-`
+

@@ -93,14 +93,15 @@ export default function AdressDataFields(props) {
                 <h5>Endereço</h5>
 
                 <TextField
+                    style={{minWidth: 270}}
                     onChange={props.handleFieldChange}
                     name="descricaoEndereco"
                     type="text"
                     label="Descriçâo do Endereco"
                     required
-                    value={props.descricaoEndereco}
-                    error={props.descricaoEndereco.length < 5}
-                    helperText={props.descricaoEndereco.length < 5 ? "Digite um nome  com mais de 4 letras" : ""}
+                    value={props.descricaoEndereco.replace(/\d+/g, "")}
+                    error={!/^([a-zA-Z][\w ]{4,})$/.test(props.descricaoEndereco) && props.descricaoEndereco !== "" }
+                    helperText={!/^([a-zA-Z][\w ]{4,})$/.test(props.descricaoEndereco) && props.descricaoEndereco !== "" ? "a descrição deve ter pelo menos 4 letras." : ""}
                 />
 
                 <InputMask
@@ -109,20 +110,24 @@ export default function AdressDataFields(props) {
                     onChange={props.handleFieldChange}
                 >
                     <TextField
+                        style={{minWidth: 270}}
                         name="cep"
                         type="text"
                         label="Cep"
                         required
+                        error={props.cep.replace(/[-_()]/g, "").length < 8 && props.cep !== ""}
+                        helperText={props.cep.replace(/[-_()]/g, "").length < 8 && props.cep !== ""? "o numero digitado não está correto" : ""}
                     />
                 </InputMask>
 
-                <FormControl style={{minWidth: 120}}>
-                    <InputLabel>Tipo de Residencia</InputLabel>
+                <FormControl style={{minWidth: 270}} >
+                    <InputLabel>Tipo de Residencia *</InputLabel>
                     <Select
                         name="tipoDeResidencia"
                         value={props.tipoDeResidencia}
                         onChange={props.handleFieldChange}
                         required
+                        error={!props.tipoDeResidencia && props.tipoDeResidencia !==""}
                     >
                         {tipoResidenciaList.map((item, index) => {
                             return (
@@ -135,7 +140,7 @@ export default function AdressDataFields(props) {
                     </Select>
                 </FormControl>
 
-                <FormControl style={{minWidth: 120}}>
+                <FormControl style={{minWidth: 270}} error={!props.tipoLogradouro && props.tipoLogradouro !==""}>
                     <InputLabel>Logradouro</InputLabel>
                     <Select
                         name="tipoLogradouro"
@@ -155,25 +160,29 @@ export default function AdressDataFields(props) {
                 </FormControl>
 
 
-                <TextField
+                <TextField style={{minWidth: 270}}
                     onChange={props.handleFieldChange}
                     name="logradouro"
                     type="text"
                     label="Endereço"
                     required
-                    value={props.logradouro}
+                    value={props.logradouro.replace(/\d+/g, "")}
+                    error={!/^([a-zA-Z][\w ]{3,})$/.test(props.logradouro) && props.logradouro !== "" }
+                    helperText={!/^([a-zA-Z][\w ]{4,})$/.test(props.logradouro) && props.logradouro !== "" ? "o logradouro deve ter pelo menos 3 letras." : ""}
                 />
 
-                <TextField
+                <TextField style={{minWidth: 270}}
                     onChange={props.handleFieldChange}
                     name="numero"
-                    type="number"
+                    type="text"
                     label="Numero"
                     required
-                    value={props.numero}
+                    value={props.numero.replace(/\D/g, "")}
+                    error={!/^([0-9]{1,})$/.test(props.numero) && props.numero !== "" }
+                    helperText={!/^([0-9]{1,})$/.test(props.numero) && props.numero !== "" ? "digite um numero." : ""}
                 />
 
-                <TextField
+                <TextField style={{minWidth: 270}}
                     onChange={props.handleFieldChange}
                     name="complemento"
                     type="text"
@@ -181,25 +190,31 @@ export default function AdressDataFields(props) {
                     value={props.complemento}
                 />
 
-                <TextField
+                <TextField style={{minWidth: 270}}
                     onChange={props.handleFieldChange}
                     name="bairro"
                     type="text"
                     label="Bairro"
                     required
-                    value={props.bairro}
+                    value={props.bairro.replace(/\d+/g, "")}
+                    error={!/^([a-zA-Z][\w ]{4,})$/.test(props.bairro) && props.bairro !== "" }
+                    helperText={!/^([a-zA-Z][\w ]{4,})$/.test(props.bairro) && props.bairro !== "" ? "o nome do bairro deve ter pelo menos 3 letras." : ""}
+
                 />
 
-                <TextField
+                <TextField style={{minWidth: 270}}
                     onChange={props.handleFieldChange}
                     name="cidade"
                     type="text"
                     label="Cidade"
-                    value={props.cidade}
                     required
+                    value={props.cidade.replace(/\d+/g, "")}
+                    error={!/^([a-zA-Z][\w ]{4,})$/.test(props.cidade) && props.cidade !== "" }
+                    helperText={!/^([a-zA-Z][\w ]{4,})$/.test(props.cidade) && props.cidade !== "" ? "o nome da cidade deve ter pelo menos 3 letras." : ""}
+
                 />
-                <FormControl style={{minWidth: 120}}>
-                    <InputLabel>Estado</InputLabel>
+                <FormControl style={{minWidth: 270}} error={!props.uf && props.uf !==""}>
+                    <InputLabel>Estado *</InputLabel>
                     <Select
                         name="uf"
                         value={props.uf}

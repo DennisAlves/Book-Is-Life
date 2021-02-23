@@ -5,11 +5,12 @@ import Paper from '@material-ui/core/Paper';
 import {push} from "connected-react-router";
 import {routes} from '../Router';
 import {connect} from "react-redux";
-import Cards from 'react-credit-cards';
-import 'react-credit-cards/es/styles-compiled.css';
 import axios from "axios";
+import Payment from "payment"
 import CadastroCliente from "../Components/CadastroCliente/CadastroCliente"
 import CadastroEndereco from "../Components/CadastroEndereço/CadastroEndereco"
+import CadastroCartao from "../Components/CadastroCartao/CadastroCartao"
+import moment from "moment";
 
 class SignupPage extends Component {
     constructor(props) {
@@ -47,7 +48,11 @@ class SignupPage extends Component {
             errorMessage: {},
             emailIsOk: false,
             passwordIsOk: false,
-            isCell: true,
+            cardNumberIsvalid: false,
+            cardNameIsvalid: false,
+            clientDateButtonDisable: false,
+            adressDateButtonDisable: false,
+            cardDateButtonDisable: false,
         };
     }
 
@@ -61,11 +66,14 @@ class SignupPage extends Component {
 
     handleFieldChange = (event) => {
         const {name, value} = event.target;
+
         this.setState({
                 [name]: value,
             }, (() => {
                 if (name === "cep") {
                     this.handleCepFillUp(this.state.cep)
+                } else if (name === "nomeCLiente") {
+
                 } else if (name === "email") {
                     this.emailIsValid(this.state.email)
                 } else if (name === "senha") {
@@ -73,19 +81,51 @@ class SignupPage extends Component {
                 }
             })
         );
+        if (this.clientFieldsValidation()) {
+            this.setState({clientDateButtonDisable: true})
+        } else {
+            this.setState({clientDateButtonDisable: false})
+        }
     };
 
     handleInputChange = (e) => {
         const target = e.target;
+        const cardFieldsValidate =()=>{
+            if (
+                this.state.cardNameIsvalid &&
+                this.state.cardNumberIsvalid &&
+                Payment.fns.validateCardExpiry(this.state.expiry) &&
+                this.state.cvc.replace(/[_]/g, "").length === 3
+            ) {
+                return false
+            } else {
+                return true
+            }
+        }
+        if (cardFieldsValidate()){
+            this.setState({cardDateButtonDisable: true})
+        } else {
+            this.setState({cardDateButtonDisable: false})
+        }
 
         if (target.name === 'number') {
             this.setState({
-                [target.name]: target.value.replace(/ /g, ''),
+                [target.name]: target.value.replace(/[^0-9]/g, ''),
+                cardNumberIsvalid: Payment.fns.validateCardNumber(target.value.replace(/[_.]/g, " ")),
             });
-        } else if (target.name === 'expiry') {
+        }
+        else if (target.name === 'name') {
             this.setState({
-                [target.name]: target.value.replace(/ |\//g, ''),
+                [target.name]: target.value,
             });
+            if (target.value !== undefined) {
+                if (target.value.length > 8) {
+                    this.setState({
+                        cardNameIsvalid: true
+                    })
+                }
+            }
+
         } else {
             this.setState({
                 [target.name]: target.value,
@@ -94,20 +134,14 @@ class SignupPage extends Component {
     };
 
     handleCallback(type, isValid) {
-        console.log(type, isValid);
+
     }
 
-    handleDateChange = () => {
-        this.setState({teste: new Date()})
-        console.log(this.state.teste)
-    };
+    handleCepFillUp = (cepUnformated) => {
+        const cep = cepUnformated.replace(/[-_]/g, "")
 
-    handleCepFillUp = (cepUnformaded) => {
-        const cep = cepUnformaded.replace(/[-_]/g, "")
-
-        console.log(cep, cep.length)
         if (cep.length === 8) {
-            const request = axios.get(`http://viacep.com.br/ws/${cep}/json/`, {
+            const request = axios.get(`https://viacep.com.br/ws/${cep}/json/`, {
                 headers: {
                     "Content-Type": "application/json",
                 }
@@ -115,7 +149,7 @@ class SignupPage extends Component {
             })
 
             request.then((response) => {
-                console.log(response.data)
+
                 this.setState({
                     tipoLogradouro: response.data.logradouro.substr(0, response.data.logradouro.indexOf(" ")),
                     logradouro: response.data.logradouro.substr(response.data.logradouro.indexOf(" ") + 1),
@@ -136,20 +170,6 @@ class SignupPage extends Component {
         }
     };
 
-    handleAdressSave = (tipoDeEndereco) => {
-        const endereco = {
-            logradouro: this.state.logradouro,
-            cep: this.state.cep,
-            endereco: this.state.endereco,
-            bairro: this.state.bairro,
-            numero: this.state.numero,
-            complemento: this.state.complemento,
-            tipoDeEndereco: tipoDeEndereco,
-        }
-        this.setState({
-            adressList: [...this.state.listaDeEndereco, endereco],
-        })
-    }
     _next = () => {
         let currentStep = this.state.currentStep
 
@@ -172,12 +192,13 @@ class SignupPage extends Component {
 
     previousButton() {
         let currentStep = this.state.currentStep;
+
         if (currentStep !== 1) {
             return (
                 <Button
                     className="btn btn-secondary"
                     type="button" onClick={this._prev}>
-                    Previous
+                    Voltar
                 </Button>
             )
         }
@@ -186,14 +207,35 @@ class SignupPage extends Component {
 
     nextButton() {
         let currentStep = this.state.currentStep;
-        if (currentStep < 3) {
-            return (
-                <Button
-                    className="btn btn-primary float-right"
-                    type="button" onClick={this._next}>
-                    Next
-                </Button>
-            )
+
+        if (currentStep <= 3) {
+            if (currentStep === 1) {
+                return (
+                    <Button
+                        className="btn btn-primary float-right"
+                        type="button" onClick={this._next} disabled={this.state.clientDateButtonDisable}>
+                        Proximo
+                    </Button>
+                )
+            }
+            if (currentStep === 2) {
+                return (
+                    <Button
+                        className="btn btn-primary float-right"
+                        type="button" onClick={this._next} disabled={this.state.adressDateButtonDisable}>
+                        Proximo
+                    </Button>
+                )
+            }
+            if (currentStep === 3) {
+                return (
+                    <Button
+                        className="btn btn-primary float-right"
+                        type="button" onClick={()=>this.goToLogin()} disabled={this.state.cardDateButtonDisable}>
+                        Enviar
+                    </Button>
+                )
+            }
         }
 
         return null;
@@ -203,7 +245,6 @@ class SignupPage extends Component {
         const regex = /^([\w-\.])+@([\w-]+\.)+[\w-]{3,4}$/g;
         if (this.state.email !== undefined) {
             if (regex.test(this.state.email)) {
-
                 this.setState({emailIsOk: true})
             } else if (!regex.test(this.state.email)) {
 
@@ -225,22 +266,42 @@ class SignupPage extends Component {
         return this.state.passwordIsOk;
     }
 
+    clientFieldsValidation() {
+        const CPF = require('cpf');
+        if (
+            !this.emailIsOk &&
+            /^([a-zA-Z][\w ]{4,})$/.test(this.state.nomeCliente) &&
+            moment().isSameOrAfter(this.state.dtNascimento) &&
+            CPF.isValid(this.state.cpf) &&
+            this.passwordIsValid(this.state.senha) &&
+            this.passwordIsValid(this.state.testeSenha) &&
+            this.state.telefone.replace(/[-_()]/g, "").length > 8 &&
+            this.state.tipoTelefone !== "" &&
+            this.state.genero !== ""
+        ) {
+            return false
+        } else {
+            return true
+        }
+    }
+     goToLogin() {
+        alert("Dados Salvos!");
+         this.props.goToLoginPage()
+    }
+
 
     render() {
         const {
             email,
-            senha,
             nomeCliente,
             cpf,
+            senha,
             testeSenha,
             telefone,
-            mostrarSenha,
+            tipoTelefone,
+            dtNascimento,
             genero,
-            name,
-            number,
-            expiry,
-            cvc,
-            focused,
+            mostrarSenha,
             descricaoEndereco,
             tipoLogradouro,
             tipoDeResidencia,
@@ -251,11 +312,16 @@ class SignupPage extends Component {
             numero,
             cidade,
             uf,
-            tipoTelefone,
-            dtNascimento,
             errorMessage,
+            name,
+            number,
+            expiry,
+            cvc,
+            focused,
             emailIsOk,
             passwordIsOk,
+            cardNumberIsvalid,
+            cardNameIsvalid,
         } = this.state;
 
 
@@ -264,14 +330,13 @@ class SignupPage extends Component {
                 <SPS.MainDiv>
                     <Paper elevation={3}>
                         <SPS.CustomHeader>
-                            <SPS.HomeLogo onClick={this.props.goToHomePage}><h3>aqui vai ficar o header</h3>
+                            <SPS.HomeLogo onClick={this.props.goToHome}><h3>aqui vai ficar o header</h3>
                             </SPS.HomeLogo>
                         </SPS.CustomHeader>
                     </Paper>
 
                     <SPS.SignupWrapper>
                         <h4>Dados para cadastro</h4>
-
                         <CadastroCliente
                             currentStep={this.state.currentStep}
                             handleFieldChange={this.handleFieldChange}
@@ -304,7 +369,7 @@ class SignupPage extends Component {
                             cidade={cidade}
                             uf={uf}
                         />
-                        <CrediCardDataFields
+                        <CadastroCartao
                             currentStep={this.state.currentStep}
                             handleInputChange={this.handleInputChange}
                             handleInputFocus={this.handleInputFocus}
@@ -314,6 +379,10 @@ class SignupPage extends Component {
                             expiry={expiry}
                             cvc={cvc}
                             focused={focused}
+                            cardNumberValidation={cardNumberIsvalid}
+                            cardNameValidation={cardNameIsvalid}
+                            //cardExpiryValidation={}
+                            //cardCvcValidation={}
                         />
 
                         {this.previousButton()}
@@ -334,68 +403,12 @@ class SignupPage extends Component {
 }
 
 
-function CrediCardDataFields(props) {
-    if (props.currentStep !== 3) {
-        return null
-    }
-    return (
-        <SPS.CreditCardWrapper>
-            <Cards
-                locale={{valid: "Valido até"}}
-                placeholders={{name: "Nome"}}
-                cvc={props.cvc}
-                expiry={props.expiry}
-                focused={props.focused}
-                name={props.name}
-                number={props.number}
-                callback={props.handleCallback}
-            />
-
-            <SPS.CreditCardFieldsWrapper>
-                <input
-                    type="tel"
-                    name="number"
-                    placeholder="Numero do Cartão"
-                    onKeyUp={props.handleInputChange}
-                    onFocus={props.handleInputFocus}
-                    required
-                />
-
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Nome"
-                    onKeyUp={props.handleInputChange}
-                    onFocus={props.handleInputFocus}
-                    required
-                />
-
-                <input
-                    type="tel"
-                    name="expiry"
-                    placeholder="MM/AA"
-                    onKeyUp={props.handleInputChange}
-                    onFocus={props.handleInputFocus}
-                    required
-                />
-
-                <input
-                    type="tel"
-                    name="cvc"
-                    placeholder="CVC"
-                    onKeyUp={props.handleInputChange}
-                    onFocus={props.handleInputFocus}
-                    required
-                />
-            </SPS.CreditCardFieldsWrapper>
-        </SPS.CreditCardWrapper>
-    )
-}
-
 function mapDispatchToProps(dispatch) {
+
     return {
         goToHomePage: () => dispatch(push(routes.HomePage)),
-        goToSignupPage: () => dispatch(push(routes.SignupPage)),
+        goToSignupPage: () => dispatch (push(routes.SignupPage)),
+        goToLoginPage: () => dispatch(push(routes.LoginPage)),
     }
 }
 
