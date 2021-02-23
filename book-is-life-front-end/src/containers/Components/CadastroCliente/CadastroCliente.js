@@ -8,7 +8,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import InputMask from "react-input-mask";
-import {SelectValidator, TextValidator, ValidatorForm} from 'react-material-ui-form-validator';
 import moment from 'moment'
 import 'moment/locale/fr';
 
@@ -33,54 +32,53 @@ export default function ClientDataFields(props) {
 
     return (
         <CCS.ClientWrapper>
-            <CCS.ClientFieldsWrapper
+            <CCS.ClientFieldsWrapper>
 
+                <TextField style={{minWidth: 270}}
+                           onChange={props.handleFieldChange}
+                           name="nomeCliente"
+                           type="text"
+                           label="Nome"
+                           required
+                           value={props.nomeCliente.replace(/\d+/g, "")}
+                           error={!/^([a-zA-Z][\w ]{3,})$/.test(props.nomeCliente) && props.nomeCliente !== ""}
+                           helperText={!/^([a-zA-Z][\w ]{3,})$/.test(props.nomeCliente) && props.nomeCliente !== "" ? "o nome deve ter pelo menos 4 letras." : ""}
+                />
 
-            >
-                <ValidatorForm>
-                    <TextValidator style={{minWidth: 270, margin: 10}}
-                                   onChange={props.handleFieldChange}
-                                   name="nomeCliente"
-                                   type="text"
-                                   label="Nome"
-                                   value={props.nomeCliente}
-                                   validators={["required", "matchRegexp:^[a-zA-Z]{4,}$"]}
-                                   errorMessages={["Esse campo é nescessario", "Digite um nome  com mais de 4 letras"]}
-                    />
+                <TextField style={{minWidth: 270}}
+                           onChange={props.handleFieldChange}
+                           name="email"
+                           type="email"
+                           label="E-mail"
+                           required
+                           isemail = "true"
+                           value={props.email}
+                           error={!props.emailError && props.email !== ""}
+                           helperText={!props.emailError && props.email !== "" ? "email invalido." : ""}
+                />
 
-                    <TextValidator style={{minWidth: 270, margin: 10}}
-                                   onChange={props.handleFieldChange}
-                                   name="email"
-                                   type="email"
-                                   label="E-mail"
-                                   required
-                                   value={props.email}
-                                   validators={['required', 'isEmail']}
-                                   errorMessages={["Esse campo é nescessario", "Email invalido"]}
-                    />
-
-                    <TextValidator style={{minWidth: 270, margin: 10}}
-                                   onChange={props.handleFieldChange}
-                                   name="dtNascimento"
-                                   type="date"
-                                   label="Data de Nascimento"
-                                   value={props.dtNascimento}
-                                   validators={['required', props.dtNascimento < 10]}
-                                   errorMessages={"É nescessario uma data de nascimento."}
-                                   InputLabelProps={{
-                                       shrink: true,
-                                   }}
-                                   InputProps={{inputProps: {max: moment().format('YYYY-MM-DD')}}}
-                    />
-
-                    <SelectValidator style={{minWidth: 270, margin: 10}}
-                                     name="genero"
-                                     label="Genero"
-                                     value={props.genero}
-                                     onChange={props.handleFieldChange}
-                                     validators={['required', props.genero !== ""]}
-                                     errorMessages={"Selecione uma Opção"}
-
+                <TextField style={{minWidth: 270}}
+                           onChange={props.handleFieldChange}
+                           name="dtNascimento"
+                           type="date"
+                           label="Data de Nascimento"
+                           value={props.dtNascimento}
+                           required
+                           error={props.dtNascimento !== "" && !moment().isSameOrAfter(props.dtNascimento)}
+                           helperText={props.dtNascimento !== "" && !moment().isSameOrAfter(props.dtNascimento) ? "É nescessario uma data de nascimento valida." : ""}
+                           InputLabelProps={{
+                               shrink: true,
+                           }}
+                           InputProps={{inputProps: {max: moment().format('YYYY-MM-DD')}}}
+                />
+                <FormControl style={{minWidth: 270}}>
+                    <InputLabel>Genero</InputLabel>
+                    <Select
+                        name="genero"
+                        label="Genero"
+                        value={props.genero}
+                        onChange={props.handleFieldChange}
+                        error={!props.genero && props.genero !== ""}
                     >
                         {tipoGeneroList.map((item, index) => {
                             return (
@@ -90,27 +88,24 @@ export default function ClientDataFields(props) {
                             );
                         })}
 
-                    </SelectValidator>
+                    </Select>
 
-                    <InputMask
-                        mask="999.999.999-99"
-                        value={props.cpf}
-                        onChange={props.handleFieldChange}
-                    >
-                        <TextField style={{minWidth: 270, margin: 10}}
-                                       name="cpf"
-                                       type="text"
-                                       label="CPF"
-                                   error={!CPF.isValid(props.cpf) && props.cpf !== "___.___.___-__" && props.cpf !== ""}
-                                   helperText={!CPF.isValid(props.cpf) && props.cpf !== "___.___.___-__" && props.cpf !== "" ? "CPF invalido" : ""}
+                </FormControl>
+                <InputMask
+                    mask="999.999.999-99"
+                    value={props.cpf}
+                    onChange={props.handleFieldChange}
+                >
+                    <TextField style={{minWidth: 270}}
+                               name="cpf"
+                               type="text"
+                               label="CPF"
+                               error={!CPF.isValid(props.cpf) && props.cpf !== "___.___.___-__" && props.cpf !== ""}
+                               helperText={!CPF.isValid(props.cpf) && props.cpf !== "___.___.___-__" && props.cpf !== "" ? "CPF invalido" : ""}
 
-                        />
+                    />
 
-                    </InputMask>
-                    {console.log(CPF.isValid(props.cpf))}
-                </ValidatorForm>
-
-
+                </InputMask>
 
 
                 <TextField
@@ -128,7 +123,7 @@ export default function ClientDataFields(props) {
                             </InputAdornment>
                         )
                     }}
-                    style={{minWidth: 270, margin: 10}}
+                    style={{minWidth: 270}}
                     id="senha"
                     name="senha"
                     label="Senha"
@@ -137,7 +132,7 @@ export default function ClientDataFields(props) {
                     type={props.mostrarSenha ? "text" : "password"}
                     onChange={props.handleFieldChange}
                     error={!props.passwordIsOk && props.senha !== props.testeSenha && props.senha !== ""}
-                    helperText={!props.passwordIsOk && props.senha !== ""&& props.senha !== props.testeSenha?
+                    helperText={!props.passwordIsOk && props.senha !== "" && props.senha !== props.testeSenha ?
                         <div>
                             <p>A senha deve ter no minimo 8 caracteres,</p>
                             <p>ter letras maiúsculas e minúsculas além de </p>
@@ -146,7 +141,7 @@ export default function ClientDataFields(props) {
                         :
                         ""
                     }
-                    />
+                />
 
                 <TextField
                     InputProps={{
@@ -162,7 +157,7 @@ export default function ClientDataFields(props) {
                             </InputAdornment>
                         )
                     }}
-                    style={{minWidth: 270, margin: 10}}
+                    style={{minWidth: 270}}
                     onChange={props.handleFieldChange}
                     name="testeSenha"
                     type={props.mostrarSenha ? "text" : "password"}
@@ -173,13 +168,14 @@ export default function ClientDataFields(props) {
                     helperText={props.senha === props.testeSenha ? "" : "senhas divergentes"}
 
                 />
-                <FormControl error={!props.tipoTelefone && props.tipoTelefone !==""} style={{minWidth: 270, margin: 10}}>
+                <FormControl style={{minWidth: 270}}>
                     <InputLabel>Tipo de telefone</InputLabel>
                     <Select
                         name="tipoTelefone"
                         value={props.tipoTelefone}
                         onChange={props.handleFieldChange}
                         required
+                        error={!props.tipoTelefone && props.tipoTelefone !== ""}
                     >
                         {tipoDeTelefoneList.map((item, index) => {
                             return (
@@ -191,20 +187,19 @@ export default function ClientDataFields(props) {
 
                     </Select>
                 </FormControl>
-
                 <InputMask
                     mask={maskFormat}
                     value={props.telefone}
                     onChange={props.handleFieldChange}
                 >
                     <TextField
-                        style={{minWidth: 270, margin: 10}}
+                        style={{minWidth: 270}}
                         name="telefone"
                         label="Telefone"
                         type="tel"
                         required
                         error={props.telefone.replace(/[-_()]/g, "").length !== typeTel && props.telefone !== ""}
-                        helperText={props.telefone.replace(/[-_()]/g, "").length !== typeTel && props.telefone !== ""? "o numero digitado não está correto" : ""}
+                        helperText={props.telefone.replace(/[-_()]/g, "").length !== typeTel && props.telefone !== "" ? "o numero digitado não está correto" : ""}
                     />
                 </InputMask>
             </CCS.ClientFieldsWrapper>
