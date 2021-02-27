@@ -1,6 +1,9 @@
-import * as dotenv from "dotenv"
-import * as knex from "knex";
-import * as Knex from "knex";
+// @ts-ignore
+import dotenv from "dotenv"
+// @ts-ignore
+import knex from "knex";
+// @ts-ignore
+import Knex from "knex";
 import {IDao} from "./IDao";
 import {EntidadeDominio} from "../Model/Dominio/EntidadeDominio";
 

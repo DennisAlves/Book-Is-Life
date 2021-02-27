@@ -1,14 +1,19 @@
 import {Bandeira} from "./Bandeira";
+import {EntidadeDominio} from "./EntidadeDominio";
 
-export class Cartao{
+export class Cartao extends EntidadeDominio{
     constructor(
         private numero: string,
         private nome: string,
         private validade: string,
         private cvc: string,
-        private bandeira: Bandeira
+        private bandeira: Bandeira,
+
     ) {
+        super()
     }
+    private ativo: boolean = false
+
     public getNumero(): string{
         return this.numero;
     }
@@ -36,10 +41,16 @@ export class Cartao{
     public setCvc(cvc: string):void{
         this.cvc = cvc;
     }
-    public getBandeira(): Bandeira{
-        return this.bandeira;
+    public getBandeira(): string{
+        return this.bandeira.getNome();
     }
     public setBandeira(bandeira: Bandeira):void{
         this.bandeira = bandeira;
+    }
+    public getAtivo() :boolean {
+        return this.ativo
+    }
+    public setAtivo(ativo: boolean) {
+        this.ativo = ativo
     }
 }

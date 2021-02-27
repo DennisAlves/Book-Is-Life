@@ -15,6 +15,7 @@ export class Cliente extends Pessoa{
     ) {
         super();
     }
+    private ativo :boolean = false;
 
     public getSenha(): string {
         return this.senha;
@@ -51,7 +52,7 @@ export class Cliente extends Pessoa{
         return this.telefone;
     }
 
-    public setCartaos(cartao: Cartao[]) {
+    public setCartao(cartao: Cartao[]) {
         this.cartao = cartao;
     }
     public getTipoCliente() {
@@ -60,5 +61,11 @@ export class Cliente extends Pessoa{
 
     public addTipoCliente(tipoCliente: TipoCliente) {
         this.tipoCliente = tipoCliente;
+    }
+    public getAtivo() :boolean {
+        return this.ativo
+    }
+    public setAtivo(ativo: boolean) {
+        this.ativo = ativo
     }
 }

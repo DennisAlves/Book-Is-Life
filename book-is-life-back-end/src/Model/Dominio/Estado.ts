@@ -2,7 +2,6 @@
 
 export class Estado {
     constructor(
-        private  nome: string,
         private  uf: string,
     ) {
     }
@@ -15,13 +14,6 @@ export class Estado {
         this.uf = uf;
     }
 
-    public getNome(): string {
-        return this.nome;
-    }
-
-    public setNome(nome: string): void {
-        this.nome = nome;
-    }
 
 }
 
