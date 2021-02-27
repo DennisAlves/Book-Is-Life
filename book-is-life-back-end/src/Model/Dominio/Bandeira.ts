@@ -1,6 +1,6 @@
 
 export class Bandeira{
-    private nome: string;
+    private nome: string = ""
 
 
     public getNome(): string {

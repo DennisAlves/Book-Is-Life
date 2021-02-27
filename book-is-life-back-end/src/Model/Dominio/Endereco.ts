@@ -15,11 +15,19 @@ export class Endereco extends EntidadeDominio {
         private  bairro: string,
         private  cep: string,
         private  cidade: Cidade,
-        private  observacoes: string,
+        private  complemento: string,
+
     ) {
         super();
     }
+    private ativo: boolean = false
 
+    public getDescricao(): string {
+        return this. descricao
+    }
+    public setDescricao(descricao: string){
+        this.descricao = descricao
+    }
     public getNomeEnd(): string {
         return this.descricao;
     }
@@ -28,16 +36,16 @@ export class Endereco extends EntidadeDominio {
         this.descricao = descricao;
     }
 
-    public getTipoLogr(): TipoLogradouro {
-        return this.tipoLogradouro;
+    public getTipoLogr(): string {
+        return this.tipoLogradouro.getNome();
     }
 
     public setTipoLogr(tipoLogradouro: TipoLogradouro): void {
-        this.tipoLogradouro = tipoLogradouro;
+        this.tipoLogradouro = tipoLogradouro;;
     }
 
-    public getTipoResid(): TipoResidencia {
-        return this.tipoResidencia;
+    public getTipoResid(): string {
+        return this.tipoResidencia.getNome();;
     }
 
     public setTipoResid(tipoResidencia: TipoResidencia): void {
@@ -52,8 +60,8 @@ export class Endereco extends EntidadeDominio {
         this.endereco = endereco;
     }
 
-    public getTipoEnd(): TipoEndereco {
-        return this.tipoEndereco;
+    public getTipoEnd(): string {
+        return this.tipoEndereco.getNome();;
     }
 
     public setTipoEnd(tipoEndereco: TipoEndereco): void {
@@ -84,12 +92,25 @@ export class Endereco extends EntidadeDominio {
         this.cep = cep;
     }
 
-    public getObservacoes(): string {
-        return this.observacoes;
+    public getCidade(): string {
+        return this.cidade.getNome();
+    }
+    public  getEstado(): string{
+        return this.cidade.getUf();
     }
 
-    public setObservacoesEnd(observacoes: string): void {
-        this.observacoes = observacoes;
+    public getComplemento(): string {
+        return this.complemento;
+    }
+
+    public setComplemento(complemento: string): void {
+        this.complemento = complemento;
+    }
+    public getAtivo() :boolean {
+        return this.ativo
+    }
+    public setAtivo(ativo: boolean) {
+        this.ativo = ativo
     }
 }
 

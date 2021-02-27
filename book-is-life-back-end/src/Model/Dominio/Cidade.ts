@@ -15,6 +15,10 @@ export class Cidade {
         this.nome = descricao;
     }
 
+    public getUf(): string {
+        return this.estado.getUf();
+    }
+
     public getEstado(): Estado {
         return this.estado;
     }
