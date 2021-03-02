@@ -1,8 +1,6 @@
 import {AbstractDao} from "./AbstractDao";
 import {EntidadeDominio} from "../Model/Dominio/EntidadeDominio";
 import {Cartao} from "../Model/Dominio/Cartao";
-import {TipoTelefone} from "../Model/Dominio/TipoTelefone";
-import {Telefone} from "../Model/Dominio/Telefone";
 import {Bandeira} from "../Model/Dominio/Bandeira";
 
 export class CartaoDao extends AbstractDao {
@@ -16,15 +14,15 @@ export class CartaoDao extends AbstractDao {
                 numero,
                 nome,
                 validade,
-                cvc,
+                cvv,
                 bandeira,
-                ativo,
+                ativo
                 )VALUES(
                     "${cartao.getId()}",
                     "${cartao.getNumero()}",
                     "${cartao.getNome()}",
                     "${cartao.getValidade()}",
-                    "${cartao.getCvc()}",
+                    "${cartao.getCvv()}",
                     "${cartao.getBandeira()}",
                     1
                 );
@@ -44,7 +42,7 @@ export class CartaoDao extends AbstractDao {
                  numero = "${cartao.getNumero()}",
                  nome = "${cartao.getNome()}",
                  validade="${cartao.getValidade()}",
-                 cvc = "${cartao.getCvc()}",
+                 cvv = "${cartao.getCvv()}",
                  bandeira = "${cartao.getBandeira()}"
                  WHERE id_usuario ="$"${cartao.getId()};
             `)
@@ -78,7 +76,7 @@ export class CartaoDao extends AbstractDao {
                     response[i].numero,
                     response[i].nome,
                     response[i].validade,
-                    response[i].cvc,
+                    response[i].cvv,
                     bandeira
                 )
                 cartaoData.push(cartao)

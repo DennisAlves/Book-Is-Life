@@ -9,8 +9,8 @@ export class Cliente extends Pessoa{
         private senha: string,
         private email: string,
         private enderecos: Endereco[],
-        private cartao: Cartao[],
-        private telefone: Telefone[],
+        private cartoes: Cartao[],
+        private telefones: Telefone[],
         private tipoCliente: TipoCliente,
     ) {
         super();
@@ -42,18 +42,18 @@ export class Cliente extends Pessoa{
     }
 
     public getCartaos() {
-        return this.cartao;
+        return this.cartoes;
     }
 
-    public setTelefone(telefone: Telefone[]) {
-        this.telefone = telefone;
+    public setTelefone(telefones: Telefone[]) {
+        this.telefones = telefones;
     }
     public getTelefone() {
-        return this.telefone;
+        return this.telefones;
     }
 
-    public setCartao(cartao: Cartao[]) {
-        this.cartao = cartao;
+    public setCartao(cartoes: Cartao[]) {
+        this.cartoes = cartoes;
     }
     public getTipoCliente() {
         return this.tipoCliente;

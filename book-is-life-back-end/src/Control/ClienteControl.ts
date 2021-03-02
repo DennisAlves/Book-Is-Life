@@ -5,6 +5,8 @@ import {Endereco} from "../Model/Dominio/Endereco";
 import {TipoEndereco} from "../Model/Dominio/TipoEndereco";
 import {TipoLogradouro} from "../Model/Dominio/TipoLogradouro";
 import {TipoResidencia} from "../Model/Dominio/TipoResidencia";
+import {Estado} from "../Model/Dominio/Estado";
+import {Cidade} from "../Model/Dominio/Cidade";
 import {TipoTelefone} from "../Model/Dominio/TipoTelefone";
 import {Telefone} from "../Model/Dominio/Telefone";
 import {Cartao} from "../Model/Dominio/Cartao";
@@ -19,6 +21,7 @@ import {DocumentoDao} from "../Dao/DocumentoDao";
 import {Genero} from "../Model/Dominio/Genero";
 // @ts-ignore
 import moment from "moment/moment";
+import {EntidadeDominio} from "../Model/Dominio/EntidadeDominio";
 
 moment.locale('pt-br');
 
@@ -54,6 +57,9 @@ export class ClienteControl {
                 let tipoResidencia = new TipoResidencia()
                 tipoResidencia.setNome(enderecos[i].tipoResidencia)
 
+                let estado = new Estado(enderecos[i].uf)
+                let cidade = new Cidade(enderecos[i].cidade, estado)
+
                 let endereco = new Endereco(
                     enderecos[i].descricao,
                     tipoEndereco,
@@ -63,7 +69,7 @@ export class ClienteControl {
                     enderecos[i].numero,
                     enderecos[i].bairro,
                     enderecos[i].cep,
-                    enderecos[i].cidade,
+                    cidade,
                     enderecos[i].complemento
                 )
                 endereco.setId(cliente.getId())
@@ -102,7 +108,7 @@ export class ClienteControl {
                     cartoes[i].numero,
                     cartoes[i].nome,
                     cartoes[i].validade,
-                    cartoes[i].cvc,
+                    cartoes[i].cvv,
                     bandeira
                 )
                 cartao.setId(cliente.getId())
@@ -113,7 +119,7 @@ export class ClienteControl {
             let documentos = req.body.documentos
             let documentoData = []
 
-            for (let i :number = 0; i < documentos.length; i++) {
+            for (let i: number = 0; i < documentos.length; i++) {
 
                 let tipoDocumento = new TipoDocumento()
                 tipoDocumento.setNome(documentos[i].tipoDocumento)
@@ -122,38 +128,51 @@ export class ClienteControl {
                 documento.setCodigo(documentos[i].codigo)
                 documento.setValidade(documentos[i].validade)
                 documento.setId(cliente.getId())
+                documento.setTipoDocumento(tipoDocumento)
 
                 documentoData.push(documento)
             }
             cliente.setDocumento(documentoData)
 
-            let result = []
 
-            result.push(await new ClienteDao().salvar(cliente))
+            await new ClienteDao().salvar(cliente)
 
             for (let i = 0; i < enderecoData.length; i++) {
-                result.push(await new EnderecoDao().salvar(enderecoData[i]))
+                await new EnderecoDao().salvar(enderecoData[i])
             }
 
             for (let i = 0; i < telefoneData.length; i++) {
-                result.push(await new TelefoneDao().salvar(telefoneData[i]))
+                await new TelefoneDao().salvar(telefoneData[i])
             }
 
             for (let i = 0; i < cartaoData.length; i++) {
-                result.push(await new CartaoDao().salvar(cartaoData[i]))
+                await new CartaoDao().salvar(cartaoData[i])
             }
 
             for (let i = 0; i < documentoData.length; i++) {
-                result.push(await new DocumentoDao().salvar(documentoData[i]))
+                await new DocumentoDao().salvar(documentoData[i])
             }
-
-            if (result.length > 0) {
-                res.status(200).send({Erro: result});
-            } else {
-                res.status(200).send({menssagem: "fornecedor criado!"});
-            }
+            res.status(200).send({menssagem: "cliente criado!"});
         } catch (e) {
             res.status(400).send({erro: e.message})
         }
     }
+    public async consultarCliente(req: Request, res: Response) {
+        try {
+            let consulta = ""
+            console.log(req.body)
+            if(req.body === undefined){
+                consulta = await new ClienteDao().consultar(undefined)
+            }
+            else{
+                const entidade = new EntidadeDominio()
+                entidade.setId(req.body.id)
+                consulta = await new ClienteDao().consultar(entidade)
+            }
+
+            res.status(200).send({consulta});
+        } catch (e) {
+        res.status(400).send({erro: e.message})
+    }
+}
 }

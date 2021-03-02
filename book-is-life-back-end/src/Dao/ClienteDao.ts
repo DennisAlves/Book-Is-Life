@@ -5,6 +5,7 @@ import {Genero} from "../Model/Dominio/Genero";
 import {EnderecoDao} from "./EnderecoDao";
 import {TelefoneDao} from "./TelefoneDao";
 import {CartaoDao} from "./CartaoDao";
+import {DocumentoDao} from "./DocumentoDao";
 
 export class ClienteDao extends AbstractDao {
     private static TABLE_NAME = "usuario";
@@ -36,6 +37,7 @@ export class ClienteDao extends AbstractDao {
                     1
                 );
                 `)
+
         } catch (e) {
             console.log("ClienteDao save:" + e.message);
         }
@@ -92,17 +94,20 @@ export class ClienteDao extends AbstractDao {
                 cliente.setId(response[i].id_usuario);
                 cliente.setDtCadastro(response[i].dt_cadastro);
                 cliente.setDtNascimento(response[i].dt_nascimento);
-                cliente.setAtivo(response[i].ativo)
-                const genero = new Genero(response[i].genero)
+                cliente.setNome(response[i].nome);
+                cliente.setAtivo(response[i].ativo);
+                const genero = new Genero(response[i].genero);
                 cliente.setGenero(genero);
 
                 cliente.setEnderecos(await new EnderecoDao().consultar(cliente))
                 cliente.setTelefone(await new TelefoneDao().consultar(cliente))
+                cliente.setDocumento(await new DocumentoDao().consultar(cliente))
                 cliente.setCartao(await new CartaoDao().consultar(cliente))
 
                 clienteData.push(cliente)
             }
             return clienteData
+            console.log(clienteData)
             await ClienteDao.desconnectDB()
         } catch (e) {
             console.log("ClienteDao search:" + e.message);
