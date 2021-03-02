@@ -8,55 +8,11 @@ import MenuItem from "@material-ui/core/MenuItem";
 import InputMask from "react-input-mask";
 
 export default function AdressDataFields(props) {
-    if (props.currentStep !== 2) {
+    if (props.currentStep !== 3) {
         return null
     }
-    const logradouroList = [
-        "Aeroporto",
-        "Alameda",
-        "Área",
-        "Avenida",
-        "Campo",
-        "Chácara",
-        "Colônia",
-        "Condomínio",
-        "Conjunto",
-        "Distrito",
-        "Esplanada",
-        "Estação",
-        "Estrada",
-        "Favela",
-        "Feira",
-        "Jardim",
-        "Ladeira",
-        "Lago",
-        "Lagoa",
-        "Largo",
-        "Loteamento",
-        "Morro",
-        "Núcleo",
-        "Parque",
-        "Passarela",
-        "Pátio",
-        "Praça",
-        "Quadra",
-        "Recanto",
-        "Residencial",
-        "Rodovia",
-        "Rua",
-        "Setor",
-        "Sítio",
-        "Travessa",
-        "Trecho",
-        "Trevo",
-        "Vale",
-        "Vereda",
-        "Via",
-        "Viaduto",
-        "Viela",
-        "Vila"
-    ];
-    const tipoResidenciaList = ["Casa", "Apartamento", "Residencial"]
+    const logradouroList = props.tipoLogradouroList;
+    const tipoResidenciaList = ["Casa", "Apartamento", "Residencial"];
     const ufList = [
         {uf: "AC", nome: "Acre"},
         {uf: "AL", nome: "Alagoas"},

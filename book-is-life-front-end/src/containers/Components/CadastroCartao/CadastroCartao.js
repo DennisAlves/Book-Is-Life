@@ -8,7 +8,7 @@ import InputMask from "react-input-mask";
 export default function CrediCardDataFields(props) {
 
 
-    if (props.currentStep !== 3) {
+    if (props.currentStep !== 4) {
         return null
     }
     return (
@@ -23,7 +23,6 @@ export default function CrediCardDataFields(props) {
                 number={props.number}
                 callback={props.handleCallback}
             />
-
             <CCS.CreditCardFieldsWrapper>
 
                 <CCS.CreditCardLineWrapper>

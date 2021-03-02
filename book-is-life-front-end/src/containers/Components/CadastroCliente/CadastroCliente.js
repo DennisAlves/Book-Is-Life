@@ -26,7 +26,7 @@ export default function ClientDataFields(props) {
         typeTel = 11
         maskFormat = "(99)99999-9999"
     }
-    const CPF = require('cpf');
+    //const CPF = require('cpf');
     const tipoDeTelefoneList = ["Residencial", "Celular", "Comercial", "Recado"]
     const tipoGeneroList = ["Masculino", "Feminino", "Não declarado"]
 
@@ -57,57 +57,6 @@ export default function ClientDataFields(props) {
                            helperText={!props.emailError && props.email !== "" ? "email invalido." : ""}
                 />
 
-                <TextField style={{minWidth: 270}}
-                           onChange={props.handleFieldChange}
-                           name="dtNascimento"
-                           type="date"
-                           label="Data de Nascimento"
-                           value={props.dtNascimento}
-                           required
-                           error={props.dtNascimento !== "" && !moment().isSameOrAfter(props.dtNascimento)}
-                           helperText={props.dtNascimento !== "" && !moment().isSameOrAfter(props.dtNascimento) ? "É nescessario uma data de nascimento valida." : ""}
-                           InputLabelProps={{
-                               shrink: true,
-                           }}
-                           InputProps={{inputProps: {max: moment().format('YYYY-MM-DD')}}}
-                />
-                <FormControl style={{minWidth: 270}}>
-                    <InputLabel>Genero</InputLabel>
-                    <Select
-                        name="genero"
-                        label="Genero"
-                        value={props.genero}
-                        onChange={props.handleFieldChange}
-                        error={!props.genero && props.genero !== ""}
-                    >
-                        {tipoGeneroList.map((item, index) => {
-                            return (
-                                <MenuItem key={index} value={item}>
-                                    <div key={index}>{item}</div>
-                                </MenuItem>
-                            );
-                        })}
-
-                    </Select>
-
-                </FormControl>
-                <InputMask
-                    mask="999.999.999-99"
-                    value={props.cpf}
-                    onChange={props.handleFieldChange}
-                >
-                    <TextField style={{minWidth: 270}}
-                               name="cpf"
-                               type="text"
-                               label="CPF"
-                               error={!CPF.isValid(props.cpf) && props.cpf !== "___.___.___-__" && props.cpf !== ""}
-                               helperText={!CPF.isValid(props.cpf) && props.cpf !== "___.___.___-__" && props.cpf !== "" ? "CPF invalido" : ""}
-
-                    />
-
-                </InputMask>
-
-
                 <TextField
 
                     InputProps={{
@@ -134,9 +83,9 @@ export default function ClientDataFields(props) {
                     error={!props.passwordIsOk && props.senha !== props.testeSenha && props.senha !== ""}
                     helperText={!props.passwordIsOk && props.senha !== "" && props.senha !== props.testeSenha ?
                         <div>
-                            <p>A senha deve ter no minimo 8 caracteres,</p>
-                            <p>ter letras maiúsculas e minúsculas além de </p>
-                            <p>conter caracteres especiais </p>
+                            <div>A senha deve ter no minimo 8 caracteres,</div>
+                            <div>ter letras maiúsculas e minúsculas além de </div>
+                            <div>conter caracteres especiais </div>
                         </div>
                         :
                         ""
@@ -168,6 +117,43 @@ export default function ClientDataFields(props) {
                     helperText={props.senha === props.testeSenha ? "" : "senhas divergentes"}
 
                 />
+
+                <TextField style={{minWidth: 270}}
+                           onChange={props.handleFieldChange}
+                           name="dtNascimento"
+                           type="date"
+                           label="Data de Nascimento"
+                           value={props.dtNascimento}
+                           required
+                           error={props.dtNascimento !== "" && !moment().isSameOrAfter(props.dtNascimento)}
+                           helperText={props.dtNascimento !== "" && !moment().isSameOrAfter(props.dtNascimento) ? "É nescessario uma data de nascimento valida." : ""}
+                           InputLabelProps={{
+                               shrink: true,
+                           }}
+                           InputProps={{inputProps: {max: moment().format('YYYY-MM-DD')}}}
+                />
+
+                <FormControl style={{minWidth: 270}}>
+                    <InputLabel>Genero</InputLabel>
+                    <Select
+                        name="genero"
+                        label="Genero"
+                        value={props.genero}
+                        onChange={props.handleFieldChange}
+                        error={!props.genero && props.genero !== ""}
+                    >
+                        {tipoGeneroList.map((item, index) => {
+                            return (
+                                <MenuItem key={index} value={item}>
+                                    <div key={index}>{item}</div>
+                                </MenuItem>
+                            );
+                        })}
+
+                    </Select>
+
+                </FormControl>
+
                 <FormControl style={{minWidth: 270}}>
                     <InputLabel>Tipo de telefone</InputLabel>
                     <Select
@@ -207,3 +193,20 @@ export default function ClientDataFields(props) {
     )
 
 }
+/*
+<InputMask
+                    mask="999.999.999-99"
+                    value={props.cpf}
+                    onChange={props.handleFieldChange}
+                >
+                    <TextField style={{minWidth: 270}}
+                               name="cpf"
+                               type="text"
+                               label="CPF"
+                               error={!CPF.isValid(props.cpf) && props.cpf !== "___.___.___-__" && props.cpf !== ""}
+                               helperText={!CPF.isValid(props.cpf) && props.cpf !== "___.___.___-__" && props.cpf !== "" ? "CPF invalido" : ""}
+
+                    />
+
+                </InputMask>
+*/

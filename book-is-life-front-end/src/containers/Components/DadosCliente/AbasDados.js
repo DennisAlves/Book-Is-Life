@@ -1,77 +1,139 @@
 import React from 'react';
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
+import PropTypes from 'prop-types';
+import {makeStyles} from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import DadosCliente from "./DadosCliente";
+import DadosEndereco from "./DadosEndereco";
+import DadosTelefone from "./DadosTelefone";
+import DadosDocumento from "./DadosDocumento";
+import DadosCartao from "./DadosCartao";
 
-interface TabPanelProps {
-    children?: React.ReactNode;
-    index: any;
-    value: any;
-}
 
-function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
+function TabPanel(props) {
+    const {children, value, index, ...other} = props;
 
     return (
         <div
             role="tabpanel"
             hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
+            id={`vertical-tabpanel-${index}`}
+            aria-labelledby={`vertical-tab-${index}`}
             {...other}
         >
             {value === index && (
-                <Box p={3}>
-                    <Typography>{children}</Typography>
+                <Box m={1} display="flex" flexDirection="row">
+                    {children}
                 </Box>
             )}
         </div>
     );
 }
 
-function a11yProps(index: any) {
+TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+};
+
+function a11yProps(index) {
     return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
+        id: `vertical-tab-${index}`,
+        'aria-controls': `vertical-tabpanel-${index}`,
     };
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
         backgroundColor: theme.palette.background.paper,
+        display: 'flex',
+        height: "100%",
+    },
+    tabs: {
+        borderRight: `1px solid ${theme.palette.divider}`,
     },
 }));
 
-export default function SimpleTabs() {
+export default function AbasDados(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
-
-    const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
+
     return (
         <div className={classes.root}>
-            <AppBar position="static">
-                <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-                    <Tab label="Item One" {...a11yProps(0)} />
-                    <Tab label="Item Two" {...a11yProps(1)} />
-                    <Tab label="Item Three" {...a11yProps(2)} />
-                </Tabs>
-            </AppBar>
+            <Tabs
+                orientation="vertical"
+                variant="scrollable"
+                value={value}
+                onChange={handleChange}
+                aria-label="Vertical tabs example"
+                className={classes.tabs}
+            >
+                <Tab label="Dados Cliente" {...a11yProps(0)} />
+                <Tab label="Endereços" {...a11yProps(1)} />
+                <Tab label="Telefones" {...a11yProps(2)} />
+                <Tab label="Documentos" {...a11yProps(3)} />
+                <Tab label="Cartões" {...a11yProps(5)} />
+            </Tabs>
             <TabPanel value={value} index={0}>
-                Item One
+                <DadosCliente
+                    nome={props.clienteNome}
+                    email={props.clienteEmail}
+                    dtNascimento={props.clienteDtNascimento}
+                    genero={props.clienteGenero}
+                    editarFunction={props.editar}
+                />
             </TabPanel>
             <TabPanel value={value} index={1}>
-                Item Two
+                {props.data.enderecos && props.data.enderecos.map((clienteData, index) =>
+                    <DadosEndereco key={index}
+                                   descricao={clienteData.descricao}
+                                   tipoEndereco={clienteData.tipoEndereco.nomeTipo}
+                                   tipoResidencia={clienteData.tipoResidencia.nomeTipo}
+                                   cep={clienteData.cep}
+                                   logradouro={clienteData.tipoLogradouro.nomeTipo}
+                                   endereco={clienteData.endereco}
+                                   numero={clienteData.numero}
+                                   bairro={clienteData.bairro}
+                                   cidade={clienteData.cidade.nome}
+                                   uf={clienteData.cidade.estado.uf}
+                    />)}
+
             </TabPanel>
             <TabPanel value={value} index={2}>
-                Item Three
+                {props.clienteDataTelefone && props.clienteDataTelefone.map((clienteData, index) =>
+                    <DadosTelefone key={index}
+                                   tipoTelefone={clienteData.tipoTelefone.nomeTipo}
+                                   numero={"(" + clienteData.ddd + ")" + clienteData.numero}
+                    />)}
+            </TabPanel>
+            <TabPanel value={value} index={3}>
+                {props.clienteDataDocumento && props.clienteDataDocumento.map((clienteData, index) =>
+                    <DadosDocumento key={index}
+                        tipoDocumento={clienteData.tipoDocumento.nome}
+                        codigo={clienteData.codigo}
+                        validade={clienteData.validade}
+                    />)}
+
+            </TabPanel>
+            <TabPanel value={value} index={4}>
+                {props.clienteDataCartao && props.clienteDataCartao.map((clienteData, index) =>
+                    <DadosCartao key={index}
+                                 numero={clienteData.numero}
+                                 nome={clienteData.nome}
+                                 validade={clienteData.validade}
+                                 cvv={clienteData.cvv}
+                                 bandeira={clienteData.bandeira.nome}
+
+                    />)}
             </TabPanel>
         </div>
     );
 }
+
+
