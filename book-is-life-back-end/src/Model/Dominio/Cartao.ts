@@ -6,7 +6,7 @@ export class Cartao extends EntidadeDominio{
         private numero: string,
         private nome: string,
         private validade: string,
-        private cvc: string,
+        private cvv: string,
         private bandeira: Bandeira,
 
     ) {
@@ -35,11 +35,11 @@ export class Cartao extends EntidadeDominio{
         this.validade = validade;
     }
 
-    public getCvc(): string{
-        return this.cvc;
+    public getCvv(): string{
+        return this.cvv;
     }
-    public setCvc(cvc: string):void{
-        this.cvc = cvc;
+    public setCvv(cvv: string):void{
+        this.cvv = cvv;
     }
     public getBandeira(): string{
         return this.bandeira.getNome();

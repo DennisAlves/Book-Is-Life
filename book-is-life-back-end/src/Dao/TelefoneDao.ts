@@ -74,6 +74,7 @@ export class TelefoneDao extends AbstractDao{
                 telefone.setTipoTelefone(tipoTelefone)
                 telefone.setDdd(response[i].ddd)
                 telefone.setNumero(response[i].numero)
+                telefone.setAtivo(response[i].ativo)
 
                 telefoneData.push(telefone)
             }

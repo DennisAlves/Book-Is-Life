@@ -6,7 +6,7 @@ import {Genero} from "./Genero";
 export class Pessoa extends EntidadeDominio {
     private nome: string = ""
     private dtNascimento: string = ""
-    private documento: any[] = []
+    private documentos: any[] = []
     private genero: any = ""
 
     public getNome(): string {
@@ -18,7 +18,7 @@ export class Pessoa extends EntidadeDominio {
     }
 
     public setDtNascimento(dtNascimento: string) {
-        this.nome = dtNascimento;
+        this.dtNascimento = dtNascimento;
     }
 
     public getDtNascimento(): string {
@@ -26,11 +26,11 @@ export class Pessoa extends EntidadeDominio {
     }
 
     public getDocumento(): Documento[] {
-        return this.documento;
+        return this.documentos;
     }
 
-    public setDocumento(documento: Documento[]) {
-        this.documento = documento;
+    public setDocumento(documentos: Documento[]) {
+        this.documentos = documentos;
     }
 
     public getGenero(): string {

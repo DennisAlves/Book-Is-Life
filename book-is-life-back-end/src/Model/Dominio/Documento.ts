@@ -25,8 +25,8 @@ export class Documento extends EntidadeDominio {
         this.validade = validade;
     }
 
-    public getTipoDocumento(): TipoDocumento {
-        return this.tipoDocumento;
+    public getTipoDocumento(): string {
+        return this.tipoDocumento.getNome();
     }
 
     public setTipoDocumento(tipoDocumento: TipoDocumento): void {

@@ -5,3 +5,4 @@ import {ClienteControl} from "../Control/ClienteControl";
 export const clienteRouter = express.Router();
 
 clienteRouter.post("/add-cliente", new ClienteControl().salvarCliente)
+clienteRouter.post("/consultar-cliente", new ClienteControl().consultarCliente)

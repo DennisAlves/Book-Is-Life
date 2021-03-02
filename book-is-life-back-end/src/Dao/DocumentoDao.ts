@@ -1,15 +1,13 @@
 import {AbstractDao} from "./AbstractDao";
 import {EntidadeDominio} from "../Model/Dominio/EntidadeDominio";
 import {Documento} from "../Model/Dominio/Documento";
-import {TipoTelefone} from "../Model/Dominio/TipoTelefone";
-import {Telefone} from "../Model/Dominio/Telefone";
 import {TipoDocumento} from "../Model/Dominio/TipoDocumento";
 
-export class DocumentoDao extends AbstractDao{
+export class DocumentoDao extends AbstractDao {
     private static TABLE_NAME = "documento";
 
     public async salvar(documento: Documento): Promise<void> {
-        try{
+        try {
             await super.setConnection().raw(`
                 INSERT INTO ${DocumentoDao.TABLE_NAME} (
                 id_usuario,
@@ -20,20 +18,20 @@ export class DocumentoDao extends AbstractDao{
                 )
                 VALUES(
                     "${documento.getId()}",
-                    "${documento.getTipoDocumento()},
+                    "${documento.getTipoDocumento()}",
                     "${documento.getCodigo()}",
                     "${documento.getValidade()}",  
                     1
                 );
                 `)
-        }catch (e) {
+        } catch (e) {
             console.log("DocumentoDao save:" + e.message);
         }
         await DocumentoDao.desconnectDB();
     }
 
     public async alterar(documento: Documento): Promise<void> {
-        try{
+        try {
             await super.setConnection().raw(`
                 UPDATE ${DocumentoDao.TABLE_NAME}
                 SET
@@ -42,7 +40,7 @@ export class DocumentoDao extends AbstractDao{
                  validade = "${documento.getValidade()}",   
                  WHERE id_usuario ="${documento.getId()}";
             `)
-        }catch (e) {
+        } catch (e) {
             console.log("DocumentoDao update:" + e.message);
         }
         await DocumentoDao.desconnectDB();
@@ -51,7 +49,8 @@ export class DocumentoDao extends AbstractDao{
     public async consultar(entidade: EntidadeDominio | undefined): Promise<any> {
         let response
         let documentoData = []
-        try{
+
+        try {
             if (entidade?.getId() !== undefined) {
 
                 response = await super.setConnection()
@@ -69,29 +68,30 @@ export class DocumentoDao extends AbstractDao{
                 tipoDocumento.setNome(response[i].tipo_documento)
 
                 const documento = new Documento()
-                documento.getTipoDocumento()
-                documento.getCodigo()
-                documento.getValidade()
+                documento.setTipoDocumento(tipoDocumento)
+                documento.setCodigo(response[i].codigo)
+                documento.setValidade(response[i].validade)
+                documento.setAtivo(response[i].ativo)
 
-                    documentoData.push(documento)
+                documentoData.push(documento)
             }
             return documentoData
             await DocumentoDao.desconnectDB()
-        }catch (e) {
+        } catch (e) {
             console.log("DocumentoDao search:" + e.message);
         }
 
     }
 
     public async inativar(entidade: EntidadeDominio): Promise<void> {
-        try{
+        try {
             await super.setConnection().raw(`
                 UPDATE ${DocumentoDao.TABLE_NAME} 
                 SET           
                 ativo = 0                                      
                 WHERE id_usuario ="${entidade.getId()}";                              
                 `)
-        }catch (e) {
+        } catch (e) {
             console.log("TelefoneDao inative:" + e.message);
         }
         await DocumentoDao.desconnectDB();
