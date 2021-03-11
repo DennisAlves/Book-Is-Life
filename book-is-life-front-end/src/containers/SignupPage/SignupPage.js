@@ -10,7 +10,10 @@ import Payment from "payment"
 import CadastroCliente from "../Components/CadastroCliente/CadastroCliente"
 import CadastroEndereco from "../Components/CadastroEndereço/CadastroEndereco"
 import CadastroCartao from "../Components/CadastroCartao/CadastroCartao"
+import DocumentoDataFields from "../Components/CadastroDocumento/CadastroDocumento"
 import moment from "moment";
+import {getCliente, getTipoDocumento, getTipoLogradouro,createCliente} from "../../Actions";
+
 
 class SignupPage extends Component {
     constructor(props) {
@@ -27,6 +30,9 @@ class SignupPage extends Component {
             telefone: "",
             mostrarSenha: false,
             genero: "",
+            tipoDocumento: "",
+            codigo: "",
+            validade: "",
             descricaoEndereco: "",
             tipoLogradouro: "",
             cep: "",
@@ -44,6 +50,7 @@ class SignupPage extends Component {
             name: "",
             number: "",
             focused: "",
+            bandeira:"",
             error: false,
             errorMessage: {},
             emailIsOk: false,
@@ -51,11 +58,16 @@ class SignupPage extends Component {
             cardNumberIsvalid: false,
             cardNameIsvalid: false,
             clientDateButtonDisable: false,
+            documentDateButtonDisable: false,
             adressDateButtonDisable: false,
             cardDateButtonDisable: false,
         };
     }
 
+    componentDidMount() {
+        this.props.getTipoDocumento();
+        this.props.getTipoLogradouro();
+    }
 
     handleInputFocus = (e) => {
         const target = e.target;
@@ -73,7 +85,6 @@ class SignupPage extends Component {
                 if (name === "cep") {
                     this.handleCepFillUp(this.state.cep)
                 } else if (name === "nomeCLiente") {
-
                 } else if (name === "email") {
                     this.emailIsValid(this.state.email)
                 } else if (name === "senha") {
@@ -81,16 +92,34 @@ class SignupPage extends Component {
                 }
             })
         );
-        if (this.clientFieldsValidation()) {
-            this.setState({clientDateButtonDisable: true})
-        } else {
-            this.setState({clientDateButtonDisable: false})
-        }
+        //if (this.clientFieldsValidation()) {
+        //    this.setState({clientDateButtonDisable: true})
+        //} else {
+        //   this.setState({clientDateButtonDisable: false})
+        //}
     };
 
     handleInputChange = (e) => {
         const target = e.target;
-        const cardFieldsValidate =()=>{
+
+
+        if (target.name === 'number') {
+            this.setState({
+                [target.name]: target.value.replace(/[^0-9]/g, ''),
+                cardNumberIsvalid: Payment.fns.validateCardNumber(target.value.replace(/[_.]/g, " ")),
+            });
+            if(target.value !== "____.____.____.____"){
+                let creditCardType = require("credit-card-type");
+                let cardType =creditCardType(target.value.substring(0,4))
+                this.setState({bandeira: cardType[0].type})
+            }
+        }
+        else {
+            this.setState({
+                [target.name]: target.value,
+            });
+        }
+        /*const cardFieldsValidate = () => {
             if (
                 this.state.cardNameIsvalid &&
                 this.state.cardNumberIsvalid &&
@@ -102,8 +131,8 @@ class SignupPage extends Component {
                 return true
             }
         }
-        if (cardFieldsValidate()){
-            this.setState({cardDateButtonDisable: true})
+        if (cardFieldsValidate()) {
+           this.setState({cardDateButtonDisable: true})
         } else {
             this.setState({cardDateButtonDisable: false})
         }
@@ -113,8 +142,7 @@ class SignupPage extends Component {
                 [target.name]: target.value.replace(/[^0-9]/g, ''),
                 cardNumberIsvalid: Payment.fns.validateCardNumber(target.value.replace(/[_.]/g, " ")),
             });
-        }
-        else if (target.name === 'name') {
+        } else if (target.name === 'name') {
             this.setState({
                 [target.name]: target.value,
             });
@@ -126,11 +154,7 @@ class SignupPage extends Component {
                 }
             }
 
-        } else {
-            this.setState({
-                [target.name]: target.value,
-            });
-        }
+        }*/
     };
 
     handleCallback(type, isValid) {
@@ -173,7 +197,10 @@ class SignupPage extends Component {
     _next = () => {
         let currentStep = this.state.currentStep
 
-        currentStep = currentStep >= 2 ? 3 : currentStep + 1
+        if(currentStep >= 1 && currentStep < 4){
+            currentStep ++
+        }
+
         this.setState({
             currentStep: currentStep
         })
@@ -208,7 +235,7 @@ class SignupPage extends Component {
     nextButton() {
         let currentStep = this.state.currentStep;
 
-        if (currentStep <= 3) {
+        if (currentStep <= 4) {
             if (currentStep === 1) {
                 return (
                     <Button
@@ -222,7 +249,7 @@ class SignupPage extends Component {
                 return (
                     <Button
                         className="btn btn-primary float-right"
-                        type="button" onClick={this._next} disabled={this.state.adressDateButtonDisable}>
+                        type="button" onClick={this._next} disabled={this.state.documentDateButtonDisable}>
                         Proximo
                     </Button>
                 )
@@ -231,7 +258,16 @@ class SignupPage extends Component {
                 return (
                     <Button
                         className="btn btn-primary float-right"
-                        type="button" onClick={()=>this.goToLogin()} disabled={this.state.cardDateButtonDisable}>
+                        type="button" onClick={this._next} disabled={this.state.adressDateButtonDisable}>
+                        Proximo
+                    </Button>
+                )
+            }
+            if (currentStep === 4) {
+                return (
+                    <Button
+                        className="btn btn-primary float-right"
+                        type="button" onClick={() => this.handleNewClient()} disabled={this.state.cardDateButtonDisable}>
                         Enviar
                     </Button>
                 )
@@ -266,6 +302,63 @@ class SignupPage extends Component {
         return this.state.passwordIsOk;
     }
 
+    createClientObject(){
+        let cliente = {
+            nome:this.state.nomeCliente,
+            dtNascimento:this.state.dtNascimento,
+            genero:this.state.genero,
+            email:this.state.email,
+            senha:this.state.senha,
+            tipoCliente:"teste",
+            enderecos:[
+                {
+                    tipoEndereco:"teste residencia",
+                    tipoLogradouro:this.state.tipoLogradouro,
+                    tipoResidencia:this.state.tipoDeResidencia,
+                    descricao:this.state.descricaoEndereco,
+                    endereco:this.state.logradouro,
+                    numero:this.state.numero,
+                    bairro:this.state.bairro,
+                    cep:this.state.cep,
+                    cidade:this.state.cidade,
+                    uf:this.state.uf,
+                    complemento: this.state.complemento
+                }
+            ],
+            telefones:[
+                {
+                    tipoTelefone:this.state.tipoTelefone,
+                    ddd:this.state.telefone.replace(/[-()]/g, "").substring(0,2),
+                    numero: this.state.telefone.replace(/[-()]/g, "").substring(2)
+                }
+            ],
+            cartoes:[
+                {
+                    bandeira: this.state.bandeira,
+                    numero:this.state.number,
+                    nome:this.state.name,
+                    validade: this.state.expiry,
+                    cvv:this.state.cvc
+                }
+            ],
+            documentos:[
+                {
+                    tipoDocumento:this.state.tipoDocumento,
+                    codigo:this.state.codigo,
+                    validade: this.state.validade
+                }
+            ]
+
+        }
+        return (cliente)
+    }
+    handleNewClient(){
+
+        const clienteData = this.createClientObject()
+
+        this.props.createCliente(clienteData)
+    }
+
     clientFieldsValidation() {
         const CPF = require('cpf');
         if (
@@ -284,9 +377,10 @@ class SignupPage extends Component {
             return true
         }
     }
-     goToLogin() {
+
+    goToLogin() {
         alert("Dados Salvos!");
-         this.props.goToLoginPage()
+        this.props.goToLoginPage()
     }
 
 
@@ -318,10 +412,14 @@ class SignupPage extends Component {
             expiry,
             cvc,
             focused,
+            bandeira,
             emailIsOk,
             passwordIsOk,
             cardNumberIsvalid,
             cardNameIsvalid,
+            tipoDocumento,
+            codigo,
+            validade,
         } = this.state;
 
 
@@ -355,8 +453,17 @@ class SignupPage extends Component {
                             errorMessage={errorMessage}
                             handleMouseDownPassword={this.handleMouseDownPassword}
                         />
+                        <DocumentoDataFields
+                            currentStep={this.state.currentStep}
+                            handleFieldChange={this.handleFieldChange}
+                            tipoDocumentoList={this.props.tipoDocumento}
+                            tipoDocumento={tipoDocumento}
+                            codigo={codigo}
+                            validade={validade}
+                        />
                         <CadastroEndereco
                             currentStep={this.state.currentStep}
+                            tipoLogradouroList={this.props.tipoLogradouro}
                             handleFieldChange={this.handleFieldChange}
                             descricaoEndereco={descricaoEndereco}
                             tipoLogradouro={tipoLogradouro}
@@ -379,15 +486,15 @@ class SignupPage extends Component {
                             expiry={expiry}
                             cvc={cvc}
                             focused={focused}
-                            cardNumberValidation={cardNumberIsvalid}
+                            //cardNumberValidation={cardNumberIsvalid}
                             cardNameValidation={cardNameIsvalid}
+                            bandeira={bandeira}
                             //cardExpiryValidation={}
                             //cardCvcValidation={}
                         />
 
                         {this.previousButton()}
                         {this.nextButton()}
-
                     </SPS.SignupWrapper>
 
 
@@ -402,14 +509,24 @@ class SignupPage extends Component {
     };
 }
 
+const mapStateToProps = (state) => ({
+    clientes: state.cliente.clientes,
+    tipoDocumento: state.cliente.tipoDocumento,
+    tipoLogradouro: state.cliente.tipoLogradouro,
+})
+
 
 function mapDispatchToProps(dispatch) {
 
     return {
         goToHomePage: () => dispatch(push(routes.HomePage)),
-        goToSignupPage: () => dispatch (push(routes.SignupPage)),
+        goToSignupPage: () => dispatch(push(routes.SignupPage)),
         goToLoginPage: () => dispatch(push(routes.LoginPage)),
+        getCliente: () => dispatch(getCliente()),
+        getTipoDocumento: () => dispatch(getTipoDocumento()),
+        getTipoLogradouro: () => dispatch(getTipoLogradouro()),
+        createCliente: (clienteData) => dispatch(createCliente(clienteData)),
     }
 }
 
-export default connect(null, mapDispatchToProps)(SignupPage)
+export default connect(mapStateToProps, mapDispatchToProps)(SignupPage)

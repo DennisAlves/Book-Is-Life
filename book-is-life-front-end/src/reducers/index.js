@@ -1,10 +1,10 @@
-import { combineReducers } from "redux";
-import { connectRouter } from "connected-react-router";
-import posts from "./posts";
+import {combineReducers} from "redux";
+import {connectRouter} from "connected-react-router";
+import cliente from "./cliente";
 
 export const generateReducers = history =>
-  combineReducers({
-    router: connectRouter(history),
-    posts,
-    // Outros reducers aqui
-  });
+    combineReducers({
+        router: connectRouter(history),
+        cliente,
+        // Outros reducers aqui
+    });
