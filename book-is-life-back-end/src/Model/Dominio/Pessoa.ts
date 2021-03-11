@@ -3,24 +3,41 @@ import {Documento} from "./Documento";
 import {Genero} from "./Genero";
 
 
-export class Pessoa extends EntidadeDominio{
+export class Pessoa extends EntidadeDominio {
+    private nome: string = ""
+    private dtNascimento: string = ""
+    private documentos: any[] = []
+    private genero: any = ""
 
-    private documento: Documento[]
-    private genero: Genero
-
-   public getDocumento(): Documento[] {
-        return this.documento;
+    public getNome(): string {
+        return this.nome;
     }
 
-    public setDocumento(documento: Documento[]) {
-        this.documento = documento;
+    public setNome(nome: string) {
+        this.nome = nome;
     }
 
-    public getgenero(): Genero {
-        return this.genero;
+    public setDtNascimento(dtNascimento: string) {
+        this.dtNascimento = dtNascimento;
     }
 
-    public setgenero(genero: Genero) {
+    public getDtNascimento(): string {
+        return this.dtNascimento;
+    }
+
+    public getDocumento(): Documento[] {
+        return this.documentos;
+    }
+
+    public setDocumento(documentos: Documento[]) {
+        this.documentos = documentos;
+    }
+
+    public getGenero(): string {
+        return this.genero.getName();
+    }
+
+    public setGenero(genero: Genero) {
         this.genero = genero;
     }
 }

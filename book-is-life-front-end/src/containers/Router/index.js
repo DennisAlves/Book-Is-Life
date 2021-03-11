@@ -10,6 +10,7 @@ import ProductPage from "../ProductPage/ProductPage";
 import AddBookPage from "../AddBookPage/AddBookPage"
 import CheckoutPage from "../CheckoutPage/CheckoutPage"
 
+
 export const routes = {
 
     HomePage: "/",
@@ -20,6 +21,8 @@ export const routes = {
     ProductPage:"/product",
     AddBookPage:"/add-book",
     CheckoutPage:"/checkout",
+    ClienteListPage:"/cliente-list"
+
 
 };
 
@@ -35,6 +38,7 @@ function Router(props) {
                 <Route exact path={routes.ProductPage} component={ProductPage}/>
                 <Route exact path={routes.AddBookPage} component={AddBookPage}/>
                 <Route exact path={routes.CheckoutPage} component={CheckoutPage}/>
+
             </Switch>
         </ConnectedRouter>
     );
