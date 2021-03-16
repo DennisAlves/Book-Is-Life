@@ -1,14 +1,13 @@
-
-
 const initialState = {
-    clienteId:"",
+    clienteId: "",
     clientes: [],
-    clienteDetails:[],
-    tipoDocumento:[],
-    tipoLogradouro:[],
+    clienteDetails: [],
+    tipoDocumento: [],
+    tipoLogradouro: [],
+    enderecos: [],
 };
 
- const cliente = (state = initialState, action) => {
+const cliente = (state = initialState, action) => {
 
     switch (action.type) {
         case 'CLIENTE_UPDATE_VALUE':
@@ -32,6 +31,11 @@ const initialState = {
                 tipoDocumento: action.payload.tipoDocumento
             }
         case 'TIPO_LOGRADOURO_UPDATE_VALUE':
+            return {
+                ...state,
+                tipoLogradouro: action.payload.tipoLogradouro
+            }
+        case 'ENDERECO_UPDATE_VALUE':
             return {
                 ...state,
                 tipoLogradouro: action.payload.tipoLogradouro

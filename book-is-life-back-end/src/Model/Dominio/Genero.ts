@@ -1,6 +1,9 @@
 
 export class Genero{
-    private name: string
+    constructor(
+        private name: string,
+    ) {
+    }
 
     public getName(): string {
         return this.name;

@@ -1,26 +1,26 @@
 import styled from "styled-components";
 
-export const CheckOutItemWrapper = styled.div`
+export const CartItemWrapper = styled.div`
   display: flex;
   flex-direction: row;
   margin: 10px;
-  
+  width: 100%;
 `
-export const CheckOutItemTopWrapper = styled.div`
+export const CartItemTopWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  width: 100%;
   justify-content: space-between;
+  width: 100%;
 `
-export const CheckOutItemPrice = styled.div`
+export const CartItemPrice = styled.div`
 `
-export const CheckOutItemMidWrapper = styled.div`
+export const CartItemMidWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
 `
-export const CheckOutItemOptionsWrapper = styled.div`
+export const CartItemOptionsWrapper = styled.div`
   display: flex;
   flex-direction: row;
   margin-top: 10px;

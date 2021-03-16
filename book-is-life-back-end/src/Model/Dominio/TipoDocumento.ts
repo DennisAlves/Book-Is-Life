@@ -2,7 +2,7 @@
 
 export class TipoDocumento{
 
-    private nome: string
+    private nome: string = ""
 
 
     public getNome(): string {

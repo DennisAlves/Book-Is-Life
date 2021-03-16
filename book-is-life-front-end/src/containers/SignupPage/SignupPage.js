@@ -278,6 +278,7 @@ class SignupPage extends Component {
     }
 
     emailIsValid = () => {
+        // eslint-disable-next-line
         const regex = /^([\w-\.])+@([\w-]+\.)+[\w-]{3,4}$/g;
         if (this.state.email !== undefined) {
             if (regex.test(this.state.email)) {
@@ -415,7 +416,7 @@ class SignupPage extends Component {
             bandeira,
             emailIsOk,
             passwordIsOk,
-            cardNumberIsvalid,
+            //cardNumberIsvalid,
             cardNameIsvalid,
             tipoDocumento,
             codigo,

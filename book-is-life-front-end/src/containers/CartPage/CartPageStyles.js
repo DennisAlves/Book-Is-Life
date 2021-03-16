@@ -24,43 +24,44 @@ export const MainDiv = styled.div`
   text-align: center;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
 
 `
-export const CheckOutWrapper = styled.div`
+export const CartPageWrapper = styled.div`
   display: flex;
   flex-direction: row;
   margin-top: 10px;
   margin-bottom: 10px;
 
 `
-export const CheckOutItensTopWrapper = styled.div`
+export const CartPageItensTopWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   margin-left: 30px;
 `
-export const CheckOutItensPriceWrapper = styled.div`
+export const CartPageItensPriceWrapper = styled.div`
   align-self: flex-end;
   margin-right: 15px;
 `
-export const CheckOutItensBottonWrapper = styled.div`
+export const CartPageItensBottonWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   margin-right: 15px;
 `
-export const CheckOutItensWrapper = styled.div`
+export const CartPageItensWrapper = styled.div`
+  margin-left: 15px;
   background-color: white;
   width: 90%;
 `
-export const CheckOutItenWrapper = styled.div`
+export const CartPageItenWrapper = styled.div`
     display: flex;
   
 `
-export const CheckOutDivWrapper = styled.div`
+export const CartPageDivWrapper = styled.div`
 `
-export const CheckOutConfirmWrapper = styled.div`
+export const CartPageConfirmWrapper = styled.div`
 
 `
 export const Footer = styled.div`

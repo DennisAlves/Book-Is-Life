@@ -5,7 +5,7 @@ import {Button} from "@material-ui/core";
 import {setSelectedClienteIDAndPush} from "../../../Actions/index"
 
 
-export function TableGrid(props) {
+export function TableGridClientes(props) {
 
     function CustomToolbar() {
         return (
@@ -145,4 +145,4 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-export default connect(null, mapDispatchToProps)(TableGrid)
+export default connect(null, mapDispatchToProps)(TableGridClientes)

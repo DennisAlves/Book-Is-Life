@@ -8,7 +8,9 @@ import UserPage from "../UserPage/UserPage";
 import ClienteListPage from "../ClienteListPage/ClienteListPage";
 import ProductPage from "../ProductPage/ProductPage";
 import AddBookPage from "../AddBookPage/AddBookPage"
-import CheckoutPage from "../CheckoutPage/CheckoutPage"
+import CheckOutPage from "../CheckOutPage/CheckOutPage"
+import CartPage from "../CartPage/CartPage"
+import DashboardPage from "../DashboardPage/DashboardPage"
 
 export const routes = {
 
@@ -19,7 +21,9 @@ export const routes = {
     ClienteListPage:"/cliente-list",
     ProductPage:"/product",
     AddBookPage:"/add-book",
-    CheckoutPage:"/checkout",
+    CheckOutPage:"/checkout",
+    CartPage:"/cart",
+    DashboardPage: "/dashboard",
 
 };
 
@@ -34,7 +38,9 @@ function Router(props) {
                 <Route exact path={routes.ClienteListPage} component={ClienteListPage}/>
                 <Route exact path={routes.ProductPage} component={ProductPage}/>
                 <Route exact path={routes.AddBookPage} component={AddBookPage}/>
-                <Route exact path={routes.CheckoutPage} component={CheckoutPage}/>
+                <Route exact path={routes.CheckOutPage} component={CheckOutPage}/>
+                <Route exact path={routes.CartPage} component={CartPage}/>
+                <Route exact path={routes.DashboardPage} component={DashboardPage}/>
             </Switch>
         </ConnectedRouter>
     );
