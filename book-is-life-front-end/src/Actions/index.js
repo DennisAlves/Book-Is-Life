@@ -33,6 +33,13 @@ export const setTipoLogradouro = (tipoLogradouro) => ({
         tipoLogradouro
     }
 })
+export const setEndereco = (enderecos) => ({
+    type: 'ENDERECO_UPDATE_VALUE',
+    payload: {
+        enderecos
+    }
+})
+
 
 export const getCliente = () => async (dispatch) => {
 

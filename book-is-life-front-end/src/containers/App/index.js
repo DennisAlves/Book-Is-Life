@@ -9,7 +9,7 @@ import {generateReducers} from "../../reducers";
 import {routerMiddleware} from "connected-react-router";
 import {createMuiTheme} from '@material-ui/core/styles';
 import purple from '@material-ui/core/colors/purple';
-//import orange from '@material-ui/core/colors/orange';
+import orange from '@material-ui/core/colors/orange';
 
 
 export const history = createBrowserHistory();
@@ -17,7 +17,7 @@ export const history = createBrowserHistory();
 const theme = createMuiTheme({
     palette: {
         primary: purple,
-        secondary: {main: '#9c27b0'},
+        secondary: orange,
     },
     status: {
         danger: 'red',

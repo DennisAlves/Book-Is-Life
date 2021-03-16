@@ -43,6 +43,7 @@ export default function AdressDataFields(props) {
         {uf: "TO", nome: "Tocantins"}
     ];
 
+
     return (
         <CES.AdressWrapper>
             <CES.AdressFieldsWrapper>
@@ -55,9 +56,9 @@ export default function AdressDataFields(props) {
                     type="text"
                     label="Descriçâo do Endereco"
                     required
-                    value={props.descricaoEndereco.replace(/\d+/g, "")}
-                    error={!/^([a-zA-Z][\w ]{4,})$/.test(props.descricaoEndereco) && props.descricaoEndereco !== "" }
-                    helperText={!/^([a-zA-Z][\w ]{4,})$/.test(props.descricaoEndereco) && props.descricaoEndereco !== "" ? "a descrição deve ter pelo menos 4 letras." : ""}
+                    value={props.descricaoEndereco}
+                    error={props.descricaoEndereco.length < 4 && props.descricaoEndereco !== "" }
+                    helperText={props.descricaoEndereco.length < 4 && props.descricaoEndereco !== "" ? "a descrição deve ter pelo menos 4 letras." : ""}
                 />
 
                 <InputMask

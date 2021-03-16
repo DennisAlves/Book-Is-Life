@@ -5,7 +5,7 @@ import {push} from "connected-react-router";
 import {routes} from '../Router';
 import Paper from '@material-ui/core/Paper';
 import {getCliente} from "../../Actions";
-import TableGrid from "../Components/TableGrid/TableGrid";
+import TableGridClientes from "../Components/TableGrid/TableGridClientes";
 
 
 class ClienteListPage extends Component {
@@ -72,7 +72,7 @@ class ClienteListPage extends Component {
                         </CLPS.CustomHeader>
                     </Paper>
                     <CLPS.ClienteListPagePageWrapper>
-                        <TableGrid rows={rows}/>
+                        <TableGridClientes rows={rows}/>
                     </CLPS.ClienteListPagePageWrapper>
                 </CLPS.MainDiv>
                 <Paper elevation={3}>

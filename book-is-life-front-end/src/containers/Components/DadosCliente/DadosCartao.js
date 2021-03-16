@@ -72,8 +72,18 @@ export default function DadosCartao(props) {
                     </Typography>
                 </Breadcrumbs>
             </CardContent>
-            <CardActions>
-                <Button size="small">Editar</Button>
+            {props.botaoEnviar
+                ?
+                <CardActions style={{justifyContent: 'center', paddingBottom: 0}}>
+                    <Button variant="outlined" color="primary" size="small" fullWidth={true}>Envie para esse
+                        endereço</Button>
+                </CardActions>
+                :
+                <></>
+            }
+            <CardActions style={{justifyContent: 'center'}}>
+                <Button size="small" variant="outlined" color="secondary" fullWidth={true}>Editar</Button>
+                <Button size="small" variant="outlined" color="secondary" fullWidth={true}>Excluir</Button>
             </CardActions>
         </Card>
     );
