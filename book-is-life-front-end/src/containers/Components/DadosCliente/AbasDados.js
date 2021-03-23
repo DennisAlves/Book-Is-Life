@@ -78,7 +78,9 @@ export default function AbasDados(props) {
                 <Tab label="Endereços" {...a11yProps(1)} />
                 <Tab label="Telefones" {...a11yProps(2)} />
                 <Tab label="Documentos" {...a11yProps(3)} />
-                <Tab label="Cartões" {...a11yProps(5)} />
+                <Tab label="Cartões" {...a11yProps(4)} />
+                <Tab label="Compras" {...a11yProps(5)} />
+                <Tab label="Cupons" {...a11yProps(6)} />
             </Tabs>
             <TabPanel value={value} index={0}>
                 <DadosCliente
@@ -131,6 +133,12 @@ export default function AbasDados(props) {
                                  bandeira={clienteData.bandeira.nome}
 
                     />)}
+            </TabPanel>
+            <TabPanel value={value} index={5}>
+
+            </TabPanel>
+            <TabPanel value={value} index={6}>
+
             </TabPanel>
         </div>
     );

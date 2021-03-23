@@ -58,8 +58,9 @@ export default function DadosDocumento(props) {
                 </Breadcrumbs>
 
             </CardContent>
-            <CardActions>
-                <Button size="small">Editar</Button>
+            <CardActions style={{justifyContent: 'center'}}>
+                <Button size="small" variant="outlined" color="secondary" fullWidth={true}>Editar</Button>
+                <Button size="small" variant="outlined" color="secondary" fullWidth={true}>Excluir</Button>
             </CardActions>
         </Card>
     );

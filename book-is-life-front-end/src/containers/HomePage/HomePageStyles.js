@@ -37,7 +37,7 @@ export const HeaderLink = styled.p`
 export const MainDiv = styled.div`
     background-color: rgb(240,240,240);
     text-align: center;
-    min-height: 80vh;
+    min-height: 100vh;
 `
 
 export const Footer = styled.div`
@@ -48,9 +48,14 @@ export const Footer = styled.div`
 
 export const BodyTitle = styled.h1`
 `
-
+export const HomePageProductWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+`
 export const Mid = styled.div`
   display: flex;
-  flex-wrap: wrap;
   justify-content:center;
+  min-height: 67.5vh;
 `

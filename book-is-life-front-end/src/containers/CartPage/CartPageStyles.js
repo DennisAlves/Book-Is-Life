@@ -30,8 +30,10 @@ export const MainDiv = styled.div`
 export const CartPageWrapper = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: center;
   margin-top: 10px;
   margin-bottom: 10px;
+  min-height: 75vh;
 
 `
 export const CartPageItensTopWrapper = styled.div`

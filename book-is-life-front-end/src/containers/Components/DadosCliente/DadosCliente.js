@@ -67,8 +67,8 @@ export default function DadosCliente(props) {
                 </Breadcrumbs>
 
             </CardContent>
-            <CardActions>
-                <Button size="small" onClick={props.editarFunction}>Editar</Button>
+            <CardActions style={{justifyContent: 'center'}}>
+                <Button size="small" variant="outlined" color="secondary" fullWidth={true}>Editar</Button>
             </CardActions>
         </Card>
     );

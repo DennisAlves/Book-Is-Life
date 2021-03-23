@@ -77,6 +77,7 @@ export const CheckOutCardItemWrapper = styled.div`
   display: flex;
   align-items: baseline;
   justify-content: center;
+  margin: 5px;
   height: 60px;
 `
 export const CheckOutResumeWrapper = styled.div`

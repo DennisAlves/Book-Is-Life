@@ -91,10 +91,6 @@ export default function CartItem(props) {
                     <Typography variant="caption" component="p">
                         Excluir
                     </Typography>
-                    <Divider orientation="vertical" variant="middle" flexItem/>
-                    <Typography variant="caption" component="p">
-                        Salvar para mais tarde
-                    </Typography>
                 </CIS.CartItemOptionsWrapper>
             </CIS.CartItemMidWrapper>
         </CIS.CartItemWrapper>
