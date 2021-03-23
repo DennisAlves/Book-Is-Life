@@ -9,6 +9,30 @@ export const setCliente = (clientes) => ({
         clientes
     }
 })
+export const setEstoque = (estoque) =>({
+    type: 'ESTOQUE_UPDATE_VALUE',
+    payload: {
+        estoque
+    }
+})
+export const setCarrinho = (carrinho) =>({
+    type: 'CARRINHO_UPDATE_VALUE',
+    payload: {
+        carrinho
+    }
+})
+export const setCarrinhoVenda = (carrinhoVenda) =>({
+    type: 'CARRINHO_VENDA_UPDATE_VALUE',
+    payload: {
+        carrinhoVenda
+    }
+})
+export const setProductId = (productId) => ({
+    type: 'PRODUCT_ID_UPDATE_VALUE',
+    payload: {
+        productId
+    }
+})
 export const setClienteDetails = (clienteDetails) => ({
     type: 'CLIENTE_DETAILS_UPDATE_VALUE',
     payload: {
@@ -69,6 +93,10 @@ export const getClienteDetails = (clienteId) => async (dispatch) => {
 export const setSelectedClienteIDAndPush = (clienteID) => async (dispatch) => {
     dispatch(setClienteId(clienteID))
     dispatch(push(routes.UserPage))
+}
+export const setSelectedProductIDAndPush = (productID) => async (dispatch) => {
+    dispatch(setProductId(productID))
+    dispatch(push(routes.ProductPage))
 }
 
 export const getTipoDocumento = () => async (dispatch) => {

@@ -123,7 +123,7 @@ export default function AbasDados(props) {
                 <Tab label="Vendas" {...a11yProps(1)} />
                 <Tab label="Estoque" {...a11yProps(2)} />
                 <Tab label="Devoluções" {...a11yProps(3)} />
-                <Tab label="Cartões" {...a11yProps(5)} />
+                <Tab label="Clientes" {...a11yProps(5)} />
             </Tabs>
             <TabPanel value={value} index={0}>
                 <Wrapper>

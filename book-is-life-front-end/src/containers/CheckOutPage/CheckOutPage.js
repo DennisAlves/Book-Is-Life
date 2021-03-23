@@ -29,7 +29,7 @@ import StepLabel from '@material-ui/core/StepLabel';
 import AdressValidation from "../Components/Validations/ValidationAdress";
 import CardValidation from "../Components/Validations/ValidationCard"
 import axios from "axios";
-import CheckOutConfirm from"../Components/CheckOutConfirm/CheckOutConfirm"
+import CheckOutConfirm from "../Components/CheckOutConfirm/CheckOutConfirm"
 
 
 class CheckOutPage extends Component {
@@ -137,12 +137,46 @@ class CheckOutPage extends Component {
             cardSplitTotal: true,
             stepButtom: true,
             cardTotal: [],
+            cardTotalSum: "",
             cardFocus: [],
-            totalValues: ""
+            totalValues: "",
+            frete: 21.00,
+            freteTotal: "",
+            valorTotal: "",
+            qtdeTotal: "",
+            itemDescription: "",
+            disableButton: true,
 
         };
     }
 
+    componentDidMount() {
+        const {carrinhoVenda} = this.props
+        let freteTotal = 0.00
+        let valorTotal = 0.00
+        let qtdeTotal = 0.00
+        let itemDescription = []
+        if (carrinhoVenda.length > 0) {
+            for (let i = 0; i < carrinhoVenda.length; i++) {
+                valorTotal = valorTotal + ((carrinhoVenda[i].custo +
+                    (carrinhoVenda[i].custo * carrinhoVenda[i].precificacao)) *
+                    parseInt(carrinhoVenda[i].qtdeCarrinho))
+                qtdeTotal = qtdeTotal + carrinhoVenda[i].qtdeCarrinho
+                itemDescription.push({titulo: carrinhoVenda[i].titulo, qtde: carrinhoVenda[i].qtdeCarrinho})
+            }
+            for (let i = 0; i <= qtdeTotal; i += 5) {
+                freteTotal = freteTotal + this.state.frete
+            }
+
+            this.setState({
+                freteTotal: freteTotal,
+                valorTotal: valorTotal,
+                qtdeTotal: qtdeTotal,
+                itemDescription: itemDescription,
+            })
+
+        }
+    }
 
     handleFieldChange = event => {
 
@@ -420,11 +454,13 @@ class CheckOutPage extends Component {
         })
         if (cardValues.length !== checkedCard) {
             for (let i = 0; i < cardValues; i++) {
-                cardValues.push(0)
+                cardValues.push("")
                 cardFocus.push(false)
             }
         }
-        cardValues[index] = event.target.value
+
+        cardValues[index] = event.target.value.replace(/[^0-9.]/g,'')
+
         cardFocus[index] = true
         for (let i = 0; i < cardFocus.length; i++) {
             if (index !== i) {
@@ -433,16 +469,17 @@ class CheckOutPage extends Component {
         }
         let total = 0
 
-            for(let i = 0; i < cardValues.length; i++) {
-                if(cardValues[i] !== ""){
-                    total = total + parseFloat(cardValues[i])
-                }
-
+        for (let i = 0; i < cardValues.length; i++) {
+            if (cardValues[i] !== "") {
+                total = total + parseFloat(cardValues[i])
             }
 
-        this.setState({totalValues: total.toFixed(2)})
+        }
+
+        this.setState({totalValues: new Intl.NumberFormat("pt-BR", {style: 'currency', currency: 'BRL'}).format(total)})
         this.setState({cardTotal: cardValues})
         this.setState({cardFocus: cardFocus})
+        this.validadeCardPayment()
     }
     handleChangeCardChecked = (index) => {
         let stateCopy = this.state.cartoes
@@ -454,10 +491,11 @@ class CheckOutPage extends Component {
                 countCardChecked++
             }
         })
-        if (countCardChecked > 1) {
-            this.setState({cardSplitTotal: false})
+        if (countCardChecked < 2) {
+            this.setState({cardSplitTotal: false, disableButton: false})
+
         } else {
-            this.setState({cardSplitTotal: true})
+            this.setState({cardSplitTotal: true, disableButton: true})
         }
         this.handleNexCard()
     }
@@ -471,6 +509,47 @@ class CheckOutPage extends Component {
         }
         this.setState({enderecos: stateCopy});
         this.handleNexAdress()
+    }
+    validadeCardPayment = () => {
+        const {cardTotal, freteTotal, valorTotal} = this.state
+        let cardArr = cardTotal
+
+        if (cardArr.length === undefined) {
+            this.setState({disableButton: false})
+        } else {
+            this.setState({disableButton: true})
+            let total = 0
+            let cardCount = 0
+            cardArr.forEach(card => {
+                    if (card > 10) {
+                        cardCount ++
+                        total += parseFloat(card)
+                    }
+                }
+            )
+            this.setState({cardTotalSum: total})
+            if (total === (freteTotal + valorTotal) && cardCount === cardArr.length) {
+                this.setState({disableButton: false})
+            }
+        }
+    }
+    validateCardValue = (index) => {
+        const {cardTotal} = this.state
+        let cardArr = cardTotal
+        let countDot = 0
+        if(cardArr[index]){
+            for (let i = 0; i < cardArr[index].length; i++) {
+                if(cardArr[index].charAt(i) ==="."){
+                    countDot ++
+                }
+            }
+            if(countDot <= 1){
+                return false
+            }
+            else {
+                return true
+            }
+        }
     }
 
 
@@ -773,28 +852,26 @@ class CheckOutPage extends Component {
                         <Divider orientation="horizontal" variant="middle"/>
                         <CPS.CheckOutResumeItens>
                             <CPS.CheckOutResumeAdress>
-                                <Paper elevation={0}>
-                                    <Typography variant="subtitle1" color="textPrimary" align="center"
-                                                style={{marginLeft: 5}}>
-                                        Endereço de Entrega
-                                    </Typography>
-                                    <Typography variant="subtitle2" color="textPrimary" align="left"
-                                                style={{marginLeft: 5}}>
-                                        {enderecos[0].descricaoEndereco}
-                                    </Typography>
-                                    <Typography variant="caption" color="textPrimary" component="div" align="left"
-                                                style={{marginLeft: 5}}>
-                                        {enderecos[0].tipoLogradouro} {enderecos[0].endereco}, {enderecos[0].numero}, {enderecos[0].complemento} {enderecos[0].bairro}
-                                    </Typography>
-                                    <Typography variant="caption" color="textPrimary" component="div" align="left"
-                                                style={{marginLeft: 5}}>
-                                        Cep: {enderecos[0].cep}
-                                    </Typography>
-                                    <Typography variant="caption" color="textPrimary" component="div" align="left"
-                                                style={{marginLeft: 5}}>
-                                        {enderecos[0].cidade} - {enderecos[0].uf}
-                                    </Typography>
-                                </Paper>
+                                <Typography variant="subtitle1" color="textPrimary" align="center"
+                                            style={{marginLeft: 5}}>
+                                    Endereço de Entrega
+                                </Typography>
+                                <Typography variant="subtitle2" color="textPrimary" align="left"
+                                            style={{marginLeft: 5}}>
+                                    {enderecos[0].descricaoEndereco}
+                                </Typography>
+                                <Typography variant="body1" color="textPrimary" component="div" align="left"
+                                            style={{marginLeft: 5}}>
+                                    {enderecos[0].tipoLogradouro} {enderecos[0].endereco}, {enderecos[0].numero}, {enderecos[0].complemento} {enderecos[0].bairro}
+                                </Typography>
+                                <Typography variant="body1" color="textPrimary" component="div" align="left"
+                                            style={{marginLeft: 5}}>
+                                    Cep: {enderecos[0].cep}
+                                </Typography>
+                                <Typography variant="body1" color="textPrimary" component="div" align="left"
+                                            style={{marginLeft: 5}}>
+                                    {enderecos[0].cidade} - {enderecos[0].uf}
+                                </Typography>
                             </CPS.CheckOutResumeAdress>
                             <CPS.CheckOutResumeCard>
 
@@ -802,20 +879,19 @@ class CheckOutPage extends Component {
                                             style={{marginLeft: 5}}>
                                     Forma de pagamento
                                 </Typography>
-                                {cardSplitTotal ?
+                                {!cardSplitTotal ?
                                     <CPS.CheckOutResumeCard>
                                         {cartoes && cartoes.map((cartao, index) => {
                                             if (cartao.checked) {
                                                 return (
                                                     <CPS.CheckOutCardItemWrapper key={Math.random() * (index + 1)}>
-                                                        <DadosCartaoResumo key={Math.random() * (index + 1)}
+                                                        <DadosCartaoResumo key={Math.random() * (index + 2)}
                                                                            numero={cartao.number.slice(cartao.number.length - 4)}
                                                                            bandeira={cartao.bandeira}
                                                         />
                                                     </CPS.CheckOutCardItemWrapper>
                                                 )
-                                            }
-                                            else{
+                                            } else {
                                                 return ("")
                                             }
                                         })}
@@ -826,14 +902,14 @@ class CheckOutPage extends Component {
                                             if (cartao.checked) {
                                                 return (
                                                     <CPS.CheckOutCardItemWrapper key={Math.random() * (index + 1)}>
-                                                        <DadosCartaoResumo key={Math.random() * (index + 1)}
+                                                        <DadosCartaoResumo key={Math.random() * (index + 2)}
                                                                            numero={cartao.number.slice(cartao.number.length - 4)}
                                                                            bandeira={cartao.bandeira}
                                                         />
                                                         <TextField
-                                                            style={{ width:120 }}
-                                                            FormHelperTextProps={{style:{ fontSize:10 }}}
-                                                            key={index}
+                                                            key={Math.random() * (index + 2)}
+                                                            style={{width: 120}}
+                                                            FormHelperTextProps={{style: {fontSize: 10}}}
                                                             name={"valueCardField" + index}
                                                             variant="outlined"
                                                             label="Valor"
@@ -842,19 +918,32 @@ class CheckOutPage extends Component {
                                                             size="small"
                                                             required
                                                             autoFocus={this.state.cardFocus[index]}
-                                                            error={cardTotal[index] < 10}
-                                                            helperText={cardTotal[index] < 10 && cardTotal[index] !== "" ? "valor minimo R$10" : ""}
+                                                            error={(cardTotal[index] < 10 || this.validateCardValue(index)) || cardTotal[index] === ""}
+                                                            helperText={(cardTotal[index] < 10 || this.validateCardValue(index)) || cardTotal[index] === "" ? "valor minimo R$10" : ""}
                                                             onChange={event => this.handleChangeCardValue(event, index)}
                                                             value={cardTotal[index]}
-
                                                         />
                                                     </CPS.CheckOutCardItemWrapper>
                                                 )
-                                            }
-                                            else{
+                                            } else {
                                                 return ("")
                                             }
                                         })}
+                                        {this.state.disableButton ?
+                                            <Typography
+                                                variant="body1"
+                                                color="error"
+                                                component="div"
+                                                align="center"
+                                                style={{marginLeft: 5}}>
+                                                Valor restante: {
+                                                ((this.state.freteTotal + this.state.valorTotal)
+                                                    - this.state.cardTotalSum).toFixed(2)}
+                                            </Typography>
+                                            :
+                                            <></>
+                                        }
+
                                     </CPS.CheckOutResumeCard>
                                 }
 
@@ -875,9 +964,12 @@ class CheckOutPage extends Component {
                                 </Paper>
                             </CPS.CheckOutResumeCupom>
                             <CheckOutConfirm
-                                qtdeTotal={3}
-                                valorTotal={75.65}
-                                buttomText={"Fazer Pedido"}
+                                qtdeTotal={this.state.qtdeTotal}
+                                valorTotal={this.state.valorTotal}
+                                buttomText={"Finalizar"}
+                                frete={this.state.freteTotal}
+                                itemDescription={this.state.itemDescription}
+                                disableButtom={this.state.disableButton}
                             />
                         </CPS.CheckOutResumeItens>
                     </CPS.CheckOutResumeWrapper>
@@ -969,7 +1061,7 @@ class CheckOutPage extends Component {
                                         <Button variant="contained" color="primary"
                                                 onClick={this.handleNext}
                                                 disabled={this.state.nextButtonVisibility}
-                                                style={{display: ( activeStep !== 2 ? 'inline' : 'none')}}
+                                                style={{display: (activeStep !== 2 ? 'inline' : 'none')}}
                                         >
                                             {activeStep === steps.length - 1 ? 'Finalizar' : 'Proximo'}
                                         </Button>
@@ -989,10 +1081,15 @@ class CheckOutPage extends Component {
     }
 }
 
+const mapStateToProps = (state) => ({
+    estoque: state.estoque.estoque,
+    carrinhoVenda: state.vendas.carrinhoVenda,
+})
+
 function mapDispatchToProps(dispatch) {
     return {
         goToHomePage: () => dispatch(push(routes.HomePage)),
     }
 }
 
-export default connect(null, mapDispatchToProps)(CheckOutPage)
+export default connect(mapStateToProps, mapDispatchToProps)(CheckOutPage)

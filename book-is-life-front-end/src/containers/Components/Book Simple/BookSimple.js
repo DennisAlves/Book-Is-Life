@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles,withStyles} from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -16,13 +16,29 @@ const useStyles = makeStyles({
     },
 
 });
+const RedTextTypography = withStyles({
+    root: {
+        color: "#ff1b1c"
+    }
+})(Typography);
+const GreenTextTypography = withStyles({
+    root: {
+        color: "#00CC66"
+    }
+})(Typography);
 
+/**
+ *
+ * @param props {onClickProduct,alt,image,title,bookTitle,author,value,onClickButtom,ativo}
+ * @returns
+ * @constructor
+ */
 
 export default function BookSimple(props) {
     const classes = useStyles();
     return (
         <Card className={classes.root}>
-            <CardActionArea>
+            <CardActionArea onClick={props.onClickProduct}>
                 <CardMedia
                     style={{ objectFit: 'contain' ,marginTop: 10 }}
                     component="img"
@@ -32,20 +48,40 @@ export default function BookSimple(props) {
                     title={props.title}
                 />
                 <CardContent style={{height: 125}}>
-                    <Typography gutterBottom variant="body2" component="p" style={{ height: 66}}>
-                        {props.bookTitle}
-                    </Typography>
-                    <Typography variant="body1" color="textSecondary" component="p">
-                        {props.author}
-                    </Typography>
-                    <Typography variant="body2" color="textPrimary" component="p">
+                    {props.bookTitle && props.bookTitle.length > 35 ?
+                        <Typography gutterBottom variant="subtitle2" component="p" style={{ height: 35}}>
+                            {props.bookTitle.substring(0,35)}...
+                        </Typography>
+                    :
+                        <Typography gutterBottom variant="subtitle2" component="p" style={{ height: 35}}>
+                            {props.bookTitle}
+                        </Typography>
+                    }
+                    {props.author && props.author.length > 20 ?
+                        <Typography variant="caption" color="textSecondary" component="p">
+                            {props.author.substring(0,20)}...
+                        </Typography>
+                        :
+                        <Typography variant="caption" color="textSecondary" component="p">
+                            {props.author}
+                        </Typography>
+                    }
+
+
+                        {props.ativo ?
+                            <GreenTextTypography> Em Estoque</GreenTextTypography>
+                            :
+                            <RedTextTypography> Sem Estoque</RedTextTypography>
+                        }
+
+                    <Typography variant="caption" color="textPrimary" component="p">
                         R$ {props.value}
                     </Typography>
                 </CardContent>
             </CardActionArea>
             <CardActions style={{justifyContent: 'center'}}>
 
-                <Button size="small" color="primary" style={{fontSize: 10}}>
+                <Button disabled={!props.ativo} size="small" color="primary" style={{fontSize: 10}} onClick={props.onClickButtom}>
                     Colocar no Carrinho
                 </Button>
             </CardActions>

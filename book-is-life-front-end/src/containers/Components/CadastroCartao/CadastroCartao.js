@@ -40,13 +40,13 @@ export default function CrediCardDataFields(props) {
 
                     </InputMask>
 
-                    {!props.cardNumberValidation && props.number !== ""?
-                        <CCS.CreditCardErrorMsg>
-                            Numero Inválido
-                        </CCS.CreditCardErrorMsg>
-                        :
-                        ""
-                    }
+                    {/*{!props.cardNumberValidation && props.number !== ""?*/}
+                    {/*    <CCS.CreditCardErrorMsg>*/}
+                    {/*        Numero Inválido*/}
+                    {/*    </CCS.CreditCardErrorMsg>*/}
+                    {/*    :*/}
+                    {/*    ""*/}
+                    {/*}*/}
 
                 </CCS.CreditCardLineWrapper>
 
@@ -60,13 +60,13 @@ export default function CrediCardDataFields(props) {
                         onFocus={props.handleInputFocus}
                         required
                     />
-                    {!props.cardNameValidation && props.name !== ""?
-                        <CCS.CreditCardErrorMsg>
-                            Nome Inválido
-                        </CCS.CreditCardErrorMsg>
-                        :
-                        ""
-                    }
+                    {/*{!props.cardNameValidation && props.name !== ""?*/}
+                    {/*    <CCS.CreditCardErrorMsg>*/}
+                    {/*        Nome Inválido*/}
+                    {/*    </CCS.CreditCardErrorMsg>*/}
+                    {/*    :*/}
+                    {/*    ""*/}
+                    {/*}*/}
                 </CCS.CreditCardLineWrapper>
 
 
